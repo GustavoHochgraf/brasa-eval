@@ -1,0 +1,10 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Generated / local
+outputs/
+inputs/
+wandb/
+.DS_Store
