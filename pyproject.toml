@@ -1,0 +1,22 @@
+[project]
+name = "brasa-eval"
+version = "0.1.0"
+description = "Toolkit for efficient, training-aware evaluation of Portuguese LLMs, with a Brazil-focused task slice, automated benchmark subset selection, and checkpoint-based learning/plateau analysis."
+authors = [
+    {name = "Gustavo Hochgraf",email = "gusthoch@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas (>=3.0.0,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [
+    { include = "brasa_eval", from = "src" }
+]
