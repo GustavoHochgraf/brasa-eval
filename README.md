@@ -47,21 +47,23 @@ Os resultados de avaliacao foram obtidos do repositorio privado [`C4AI/TuQwen-ev
 
 ### Breakdown por categoria
 
+As 40 tarefas sao agrupadas manualmente em 6 categorias diagnosticas orientadas a interpretabilidade (manual capability grouping). O PoETa v2 original possui subcategorias multi-rotulo; este paper colapsa essas subcategorias em buckets mais amplos, atribuindo cada task ao bucket que melhor representa seu sinal diagnostico dominante.
+
 | Categoria | # Tasks | Qwen Base | TuQwen (GigaVerbo) | QwenRolina (Carolina) |
 |:----------|:-------:|:---------:|:------------------:|:---------------------:|
 | Brazil / exams / culture | 6 | 0.6228 | 0.6300 | **0.6461** |
-| NLI / text understanding | 15 | **0.7237** | 0.7092 | 0.7002 |
-| toxicity / social | 6 | **0.7328** | 0.7181 | 0.7204 |
-| reasoning | 8 | 0.5712 | **0.5779** | 0.5766 |
-| math | 4 | 0.5238 | **0.5299** | 0.5096 |
-| code / other | 1 | 0.9667 | 0.9667 | 0.9667 |
+| Text understanding / QA / classification | 11 | **0.7192** | 0.7016 | 0.6947 |
+| Social / safety | 6 | **0.7328** | 0.7181 | 0.7204 |
+| Reasoning | 12 | 0.6262 | **0.6286** | 0.6228 |
+| Math | 4 | 0.5238 | **0.5299** | 0.5096 |
+| Code / other | 1 | 0.9667 | 0.9667 | 0.9667 |
 
 **Observacoes:**
 - **Brazil / exams / culture**: QwenRolina (+2.33 pp vs base) supera TuQwen (+0.72 pp). O Carolina, apesar de menor, contem conteudo cultural brasileiro que beneficia ENEM, BLUEX e BRoverbs.
-- **NLI / text understanding**: O base Qwen e o melhor. O continued pretraining reduz desempenho em tarefas de compreensao textual traduzidas (queda de -1.45 pp para TuQwen, -2.35 pp para QwenRolina).
-- **toxicity / social**: Mesma tendencia — o base lidera. Apesar de a maioria das tarefas ser nativa (4 Native + 2 Translated), o continued pretraining nao melhora deteccao de toxicidade.
-- **reasoning e math**: TuQwen apresenta leve vantagem, consistente com o GigaVerbo sendo um corpus maior e mais diverso.
-- **code / other**: Efeito teto — todos atingem 96.7% na unica tarefa (BB Code Line Description).
+- **Text understanding / QA / classification**: O base Qwen e o melhor. O continued pretraining reduz desempenho em tarefas de compreensao textual traduzidas (queda de -1.76 pp para TuQwen, -2.45 pp para QwenRolina).
+- **Social / safety**: Mesma tendencia — o base lidera. Apesar de a maioria das tarefas ser nativa (4 Native + 2 Translated), o continued pretraining nao melhora deteccao de toxicidade.
+- **Reasoning e Math**: TuQwen apresenta leve vantagem, consistente com o GigaVerbo sendo um corpus maior e mais diverso.
+- **Code / other**: Efeito teto — todos atingem 96.7% na unica tarefa (BB Code Line Description).
 
 ### Top mudancas por tarefa (vs. Qwen Base)
 
@@ -146,10 +148,58 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 
 ### Tarefas PoETa v2
 
-40 tarefas avaliadas, organizadas em 6 categorias:
+40 tarefas avaliadas, organizadas em 6 categorias de capacidade. A tabela abaixo explicita o agrupamento completo (fonte: `data/paper_final_segmentation.csv`):
 
-- **14 tarefas nativas** (originalmente em portugues): ASSIN RTE/STS, BLUEX, Enem, Enem 2022, FaQuAD, TweetsentBR, BRoverbs (x2), InferBR, Repro, Mina BR, PT Hate Speech, HateBR Binary
-- **26 tarefas traduzidas** (traduzidas do ingles): AGNews, BoolQ, IMDb, Massive, MKQA, SST-2, WSC-285, 13 tarefas BigBench, StoryCloze, Math MC, GSM8K MC, AGIEval SAT Math, Balanced COPA, LogiQA
+| Categoria | Tarefa | Origem | Metrica | Notas |
+|:----------|:-------|:------:|:-------:|:------|
+| **Brazil / exams / culture** (6) | | | | |
+| | BLUEX | Native | acc_norm | |
+| | Enem | Native | acc | |
+| | Enem 2022 | Native | acc | |
+| | BRoverbs History to Proverb | Native | acc | |
+| | BRoverbs Proverb to History | Native | acc | |
+| | Repro | Native | acc | |
+| **Text understanding / QA / classification** (11) | | | | |
+| | Assin RTE | Native | acc | |
+| | Assin STS | Native | pearson | |
+| | Faquad | Native | f1 | |
+| | AGNews | Translated | acc | |
+| | BoolQ | Translated | acc | |
+| | IMDb | Translated | acc | |
+| | Massive | Translated | acc | Multilingual nativo; classificado como Translated seguindo protocolo PoETa v2 |
+| | MKQA | Translated | best_em | Multilingual nativo; classificado como Translated seguindo protocolo PoETa v2 |
+| | SST-2 | Translated | acc | |
+| | BB General Knowledge | Translated | acc | |
+| | BB VitaminC Fact Verification | Translated | acc | |
+| **Social / safety** (6) | | | | |
+| | TweetsentBR | Native | acc | |
+| | Mina BR | Native | acc | |
+| | PT Hate Speech | Native | acc | |
+| | HateBR Binary | Native | acc | |
+| | BB Simple Ethical Questions | Translated | acc | |
+| | BB BBQ | Translated | acc | |
+| **Reasoning** (12) | | | | |
+| | InferBR | Native | acc | |
+| | WSC-285 | Translated | acc | |
+| | StoryCloze | Translated | acc | |
+| | BB Social IQA | Translated | acc | |
+| | BB Analogical Similarity | Translated | acc | |
+| | BB Empirical Judgments | Translated | acc | |
+| | BB Fallacies Syllogisms | Translated | acc | |
+| | BB StrategyQA | Translated | acc | |
+| | BB Causal Judgment | Translated | acc | |
+| | BB Cause and Effect | Translated | acc | |
+| | Balanced COPA | Translated | acc | |
+| | LogiQA | Translated | acc | |
+| **Math** (4) | | | | |
+| | BB Mathematical Induction | Translated | acc | |
+| | Math MC | Translated | acc | |
+| | GSM8K MC | Translated | acc | |
+| | AGIEval SAT Math | Translated | acc | |
+| **Code / other** (1) | | | | |
+| | BB Code Line Description | Translated | acc | |
+
+**Totais:** 14 tarefas nativas + 26 traduzidas = 40 tarefas.
 
 4 tarefas do config original (ARC Challenge, ARC Easy, Ethics Commonsense, POSComp) foram excluidas por dependerem de datasets privados da Maritaca AI.
 

@@ -9,11 +9,11 @@
   "n_translated": 26,
   "category_scores": {
     "Brazil / exams / culture": 0.6228,
-    "NLI / text understanding": 0.7237,
-    "code / other": 0.9667,
-    "math": 0.5238,
-    "reasoning": 0.5712,
-    "toxicity / social": 0.7328
+    "Code / other": 0.9667,
+    "Math": 0.5238,
+    "Reasoning": 0.6262,
+    "Social / safety": 0.7328,
+    "Text understanding / QA / classification": 0.7192
   },
   "missing_tasks": []
 }

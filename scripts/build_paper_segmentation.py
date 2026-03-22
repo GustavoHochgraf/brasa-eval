@@ -43,8 +43,8 @@ DEFAULT_METRIC = "acc"
 
 # ---------------------------------------------------------------------------
 # Canonical paper category mapping (deterministic, one per task)
-# Categories: Brazil / exams / culture | toxicity / social |
-#             NLI / text understanding | reasoning | math | code / other
+# Categories: Brazil / exams / culture | Social / safety |
+#             Text understanding / QA / classification | Reasoning | Math | Code / other
 # ---------------------------------------------------------------------------
 CATEGORIA_PAPER: dict[str, str] = {
     # --- Native: Brazil / exams / culture ---
@@ -55,49 +55,50 @@ CATEGORIA_PAPER: dict[str, str] = {
     "Broverbs Proverb to History": "Brazil / exams / culture",
     "Repro": "Brazil / exams / culture",
     # POSComp excluded (private Maritaca AI dataset)
-    # --- Native: toxicity / social ---
-    "TweetsentBR": "toxicity / social",
-    "Mina BR": "toxicity / social",
-    "PT Hate Speech": "toxicity / social",
-    "HateBR Binary": "toxicity / social",
-    # --- Native: NLI / text understanding ---
-    "Assin RTE": "NLI / text understanding",
-    "Assin STS": "NLI / text understanding",
-    "Faquad": "NLI / text understanding",
-    "InferBR": "NLI / text understanding",
-    # --- Translated: NLI / text understanding ---
-    "AGNews": "NLI / text understanding",
-    "BoolQ": "NLI / text understanding",
-    "IMDb": "NLI / text understanding",
-    "Massive": "NLI / text understanding",
-    "MKQA": "NLI / text understanding",
-    "SST-2": "NLI / text understanding",
-    "WSC-285": "NLI / text understanding",
-    "StoryCloze": "NLI / text understanding",
-    "BB VitaminC Fact Verification": "NLI / text understanding",
-    "BB General Knowledge": "NLI / text understanding",
-    "BB Social IQA": "NLI / text understanding",
-    # --- Translated: toxicity / social ---
-    "BB Simple Ethical Questions": "toxicity / social",
-    "BB BBQ": "toxicity / social",
+    # --- Native: Social / safety ---
+    "TweetsentBR": "Social / safety",
+    "Mina BR": "Social / safety",
+    "PT Hate Speech": "Social / safety",
+    "HateBR Binary": "Social / safety",
+    # --- Native: Text understanding / QA / classification ---
+    "Assin RTE": "Text understanding / QA / classification",
+    "Assin STS": "Text understanding / QA / classification",
+    "Faquad": "Text understanding / QA / classification",
+    # --- Native: Reasoning ---
+    "InferBR": "Reasoning",
+    # --- Translated: Text understanding / QA / classification ---
+    "AGNews": "Text understanding / QA / classification",
+    "BoolQ": "Text understanding / QA / classification",
+    "IMDb": "Text understanding / QA / classification",
+    "Massive": "Text understanding / QA / classification",
+    "MKQA": "Text understanding / QA / classification",
+    "SST-2": "Text understanding / QA / classification",
+    "BB General Knowledge": "Text understanding / QA / classification",
+    "BB VitaminC Fact Verification": "Text understanding / QA / classification",
+    # --- Translated: Social / safety ---
+    "BB Simple Ethical Questions": "Social / safety",
+    "BB BBQ": "Social / safety",
     # Ethics Commonsense excluded (private Maritaca AI dataset)
-    # --- Translated: reasoning ---
-    "BB Analogical Similarity": "reasoning",
-    "BB Empirical Judgments": "reasoning",
-    "BB Fallacies Syllogisms": "reasoning",
-    "BB StrategyQA": "reasoning",
-    "BB Causal Judgment": "reasoning",
-    "BB Cause and Effect": "reasoning",
+    # --- Translated: Reasoning ---
+    "WSC-285": "Reasoning",
+    "StoryCloze": "Reasoning",
+    "BB Social IQA": "Reasoning",
+    "BB Analogical Similarity": "Reasoning",
+    "BB Empirical Judgments": "Reasoning",
+    "BB Fallacies Syllogisms": "Reasoning",
+    "BB StrategyQA": "Reasoning",
+    "BB Causal Judgment": "Reasoning",
+    "BB Cause and Effect": "Reasoning",
     # ARC Challenge, ARC Easy excluded (private Maritaca AI datasets)
-    "Balanced COPA": "reasoning",
-    "LogiQA": "reasoning",
-    # --- Translated: math ---
-    "BB Mathematical Induction": "math",
-    "Math MC": "math",
-    "GSM8K MC": "math",
-    "AGIEval SAT Math": "math",
-    # --- Translated: code / other ---
-    "BB Code Line Description": "code / other",
+    "Balanced COPA": "Reasoning",
+    "LogiQA": "Reasoning",
+    # --- Translated: Math ---
+    "BB Mathematical Induction": "Math",
+    "Math MC": "Math",
+    "GSM8K MC": "Math",
+    "AGIEval SAT Math": "Math",
+    # --- Translated: Code / other ---
+    "BB Code Line Description": "Code / other",
 }
 
 # ---------------------------------------------------------------------------
@@ -303,8 +304,8 @@ def build_segmentation(
         # Paper category
         cat = CATEGORIA_PAPER.get(task)
         if cat is None:
-            log.warning("No categoria_paper for task: %s — defaulting to 'NLI / text understanding'", task)
-            cat = "NLI / text understanding"
+            log.warning("No categoria_paper for task: %s — defaulting to 'Text understanding / QA / classification'", task)
+            cat = "Text understanding / QA / classification"
 
         # Benchmark origin
         origem = BENCHMARK_ORIGEM.get(task, task)
@@ -366,11 +367,11 @@ def build_segmentation(
     assert set(df["comparability"]) <= {"High", "Medium", "Low"}
     expected_cats = {
         "Brazil / exams / culture",
-        "toxicity / social",
-        "NLI / text understanding",
-        "reasoning",
-        "math",
-        "code / other",
+        "Social / safety",
+        "Text understanding / QA / classification",
+        "Reasoning",
+        "Math",
+        "Code / other",
     }
     actual_cats = set(df["categoria_paper"])
     assert actual_cats <= expected_cats, f"Unexpected categories: {actual_cats - expected_cats}"
