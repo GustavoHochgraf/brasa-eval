@@ -1,0 +1,41 @@
+task,original_poeta_tags,manual_paper_category,native_translated
+BLUEX,"brazil, exams",Brazil / exams / culture,Native
+Broverbs History to Proverb,"brazil, proverbs, text-understanding",Brazil / exams / culture,Native
+Broverbs Proverb to History,"brazil, proverbs, text-understanding",Brazil / exams / culture,Native
+Enem,"brazil, exams",Brazil / exams / culture,Native
+Enem 2022,"brazil, exams",Brazil / exams / culture,Native
+Repro,brazil,Brazil / exams / culture,Native
+BB Code Line Description,code,Code / other,Translated
+AGIEval SAT Math,"exams, math",Math,Translated
+BB Mathematical Induction,"math, reasoning",Math,Translated
+GSM8K MC,"exams, math",Math,Translated
+Math MC,"exams, math",Math,Translated
+BB Analogical Similarity,reasoning,Reasoning,Translated
+BB Causal Judgment,"reasoning, text-understanding",Reasoning,Translated
+BB Cause and Effect,common-sense,Reasoning,Translated
+BB Empirical Judgments,reasoning,Reasoning,Translated
+BB Fallacies Syllogisms,reasoning,Reasoning,Translated
+BB Social IQA,common-sense,Reasoning,Translated
+BB StrategyQA,reasoning,Reasoning,Translated
+Balanced COPA,"common-sense, reasoning",Reasoning,Translated
+InferBR,reasoning,Reasoning,Native
+LogiQA,"reasoning, text-understanding",Reasoning,Translated
+StoryCloze,"common-sense, text-understanding",Reasoning,Translated
+WSC-285,common-sense,Reasoning,Translated
+BB BBQ,"ethics, text-understanding",Social / safety,Translated
+BB Simple Ethical Questions,"common-sense, ethics",Social / safety,Translated
+HateBR Binary,"brazil, hate-speech, social-media",Social / safety,Native
+Mina BR,"brazil, hate-speech, social-media",Social / safety,Native
+PT Hate Speech,"brazil, hate-speech, social-media",Social / safety,Native
+TweetsentBR,"brazil, social-media",Social / safety,Native
+AGNews,text-understanding,Text understanding / QA / classification,Translated
+Assin RTE,reasoning,Text understanding / QA / classification,Native
+Assin STS,common-sense,Text understanding / QA / classification,Native
+BB General Knowledge,general-knowledge,Text understanding / QA / classification,Translated
+BB VitaminC Fact Verification,text-understanding,Text understanding / QA / classification,Translated
+BoolQ,general-knowledge,Text understanding / QA / classification,Translated
+Faquad,text-understanding,Text understanding / QA / classification,Native
+IMDb,common-sense,Text understanding / QA / classification,Translated
+MKQA,general-knowledge,Text understanding / QA / classification,Translated
+Massive,common-sense,Text understanding / QA / classification,Translated
+SST-2,common-sense,Text understanding / QA / classification,Translated

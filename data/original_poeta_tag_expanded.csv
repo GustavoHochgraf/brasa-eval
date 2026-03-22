@@ -1,0 +1,65 @@
+task,lm_eval_task,original_tag,native_translated,metric,categoria_paper,included_in_paper_subset
+Assin RTE,assin_rte_greedy,reasoning,Native,acc,Text understanding / QA / classification,True
+Assin STS,assin_sts_greedy,common-sense,Native,pearson,Text understanding / QA / classification,True
+BLUEX,bluex_greedy,exams,Native,acc_norm,Brazil / exams / culture,True
+BLUEX,bluex_greedy,brazil,Native,acc_norm,Brazil / exams / culture,True
+Enem,enem_greedy,exams,Native,acc,Brazil / exams / culture,True
+Enem,enem_greedy,brazil,Native,acc,Brazil / exams / culture,True
+Enem 2022,enem2022_greedy,exams,Native,acc,Brazil / exams / culture,True
+Enem 2022,enem2022_greedy,brazil,Native,acc,Brazil / exams / culture,True
+Faquad,faquad_nli_greedy,text-understanding,Native,f1,Text understanding / QA / classification,True
+TweetsentBR,tweetsentbr_greedy,brazil,Native,acc,Social / safety,True
+TweetsentBR,tweetsentbr_greedy,social-media,Native,acc,Social / safety,True
+Broverbs History to Proverb,broverbs_history_to_proverb_greedy,text-understanding,Native,acc,Brazil / exams / culture,True
+Broverbs History to Proverb,broverbs_history_to_proverb_greedy,proverbs,Native,acc,Brazil / exams / culture,True
+Broverbs History to Proverb,broverbs_history_to_proverb_greedy,brazil,Native,acc,Brazil / exams / culture,True
+Broverbs Proverb to History,broverbs_proverb_to_history_greedy,text-understanding,Native,acc,Brazil / exams / culture,True
+Broverbs Proverb to History,broverbs_proverb_to_history_greedy,proverbs,Native,acc,Brazil / exams / culture,True
+Broverbs Proverb to History,broverbs_proverb_to_history_greedy,brazil,Native,acc,Brazil / exams / culture,True
+InferBR,inferbr_greedy,reasoning,Native,acc,Reasoning,True
+Repro,repro_greedy,brazil,Native,acc,Brazil / exams / culture,True
+Mina BR,mina_br_greedy,brazil,Native,acc,Social / safety,True
+Mina BR,mina_br_greedy,social-media,Native,acc,Social / safety,True
+Mina BR,mina_br_greedy,hate-speech,Native,acc,Social / safety,True
+PT Hate Speech,pt_hate_speech_greedy,brazil,Native,acc,Social / safety,True
+PT Hate Speech,pt_hate_speech_greedy,social-media,Native,acc,Social / safety,True
+PT Hate Speech,pt_hate_speech_greedy,hate-speech,Native,acc,Social / safety,True
+HateBR Binary,hatebr_binary_greedy,brazil,Native,acc,Social / safety,True
+HateBR Binary,hatebr_binary_greedy,social-media,Native,acc,Social / safety,True
+HateBR Binary,hatebr_binary_greedy,hate-speech,Native,acc,Social / safety,True
+AGNews,agnews_pt_greedy,text-understanding,Translated,acc,Text understanding / QA / classification,True
+BoolQ,boolq_pt_greedy,general-knowledge,Translated,acc,Text understanding / QA / classification,True
+IMDb,imdb_pt_greedy,common-sense,Translated,acc,Text understanding / QA / classification,True
+Massive,massive_pt_greedy,common-sense,Translated,acc,Text understanding / QA / classification,True
+MKQA,mkqa_pt_greedy,general-knowledge,Translated,best_em,Text understanding / QA / classification,True
+SST-2,sst2_pt_greedy,common-sense,Translated,acc,Text understanding / QA / classification,True
+WSC-285,wsc285_pt_greedy,common-sense,Translated,acc,Reasoning,True
+BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,reasoning,Translated,acc,Reasoning,True
+BB Code Line Description,bigbench_pt_code_line_description_greedy,code,Translated,acc,Code / other,True
+BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,reasoning,Translated,acc,Reasoning,True
+BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,reasoning,Translated,acc,Reasoning,True
+BB General Knowledge,bigbench_pt_general_knowledge_greedy,general-knowledge,Translated,acc,Text understanding / QA / classification,True
+BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,reasoning,Translated,acc,Math,True
+BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,math,Translated,acc,Math,True
+BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,common-sense,Translated,acc,Social / safety,True
+BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,ethics,Translated,acc,Social / safety,True
+BB StrategyQA,bigbench_pt_strategyqa_greedy,reasoning,Translated,acc,Reasoning,True
+BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,text-understanding,Translated,acc,Text understanding / QA / classification,True
+BB Social IQA,bigbench_pt_social_iqa_greedy,common-sense,Translated,acc,Reasoning,True
+BB Causal Judgment,bigbench_pt_causal_judgment_greedy,text-understanding,Translated,acc,Reasoning,True
+BB Causal Judgment,bigbench_pt_causal_judgment_greedy,reasoning,Translated,acc,Reasoning,True
+BB BBQ,bigbench_pt_bbq_greedy,text-understanding,Translated,acc,Social / safety,True
+BB BBQ,bigbench_pt_bbq_greedy,ethics,Translated,acc,Social / safety,True
+BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,common-sense,Translated,acc,Reasoning,True
+StoryCloze,storycloze_pt_greedy,common-sense,Translated,acc,Reasoning,True
+StoryCloze,storycloze_pt_greedy,text-understanding,Translated,acc,Reasoning,True
+Math MC,math_mc_greedy,math,Translated,acc,Math,True
+Math MC,math_mc_greedy,exams,Translated,acc,Math,True
+GSM8K MC,gsm8k_mc_greedy,math,Translated,acc,Math,True
+GSM8K MC,gsm8k_mc_greedy,exams,Translated,acc,Math,True
+AGIEval SAT Math,agieval_sat_math_greedy,math,Translated,acc,Math,True
+AGIEval SAT Math,agieval_sat_math_greedy,exams,Translated,acc,Math,True
+Balanced COPA,balanced_copa_greedy,common-sense,Translated,acc,Reasoning,True
+Balanced COPA,balanced_copa_greedy,reasoning,Translated,acc,Reasoning,True
+LogiQA,logiqa_greedy,text-understanding,Translated,acc,Reasoning,True
+LogiQA,logiqa_greedy,reasoning,Translated,acc,Reasoning,True
