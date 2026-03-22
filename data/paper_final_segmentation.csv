@@ -1,41 +1,41 @@
 task,lm_eval_task,metric,benchmark_origem,categoria_paper,native_translated,overlap_class,comparability,few_shot,original_subcategories,suite_presence,notes_curtas
-Assin RTE,assin_rte_greedy,acc,ASSIN2,NLI / text understanding,Native,Strict,Medium,18,reasoning,PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,
-Assin STS,assin_sts_greedy,pearson,ASSIN2,NLI / text understanding,Native,Strict,Medium,15,common-sense,PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,
+Assin RTE,assin_rte_greedy,acc,ASSIN2,Text understanding / QA / classification,Native,Strict,Medium,18,reasoning,PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,
+Assin STS,assin_sts_greedy,pearson,ASSIN2,Text understanding / QA / classification,Native,Strict,Medium,15,common-sense,PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,
 BLUEX,bluex_greedy,acc_norm,BLUEX,Brazil / exams / culture,Native,Strict,Medium,1,"exams, brazil",PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
 Enem,enem_greedy,acc,ENEM,Brazil / exams / culture,Native,Strict,Medium,1,"exams, brazil",PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
 Enem 2022,enem2022_greedy,acc,ENEM,Brazil / exams / culture,Native,Non-overlap,High,1,"exams, brazil",PoETa-v1; PoETa-v2,Brazilian-origin dataset
-Faquad,faquad_nli_greedy,f1,FaQuAD,NLI / text understanding,Native,Partial,Low,4,text-understanding,PoETa-v1; PoETa-v2; Tucano,
-TweetsentBR,tweetsentbr_greedy,acc,TweetSentBR,toxicity / social,Native,Strict,Medium,5,"brazil, social-media",PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
+Faquad,faquad_nli_greedy,f1,FaQuAD,Text understanding / QA / classification,Native,Partial,Low,4,text-understanding,PoETa-v1; PoETa-v2; Tucano,
+TweetsentBR,tweetsentbr_greedy,acc,TweetSentBR,Social / safety,Native,Strict,Medium,5,"brazil, social-media",PoETa-v1; PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
 Broverbs History to Proverb,broverbs_history_to_proverb_greedy,acc,BRoverbs,Brazil / exams / culture,Native,Non-overlap,High,5,"text-understanding, proverbs, brazil",PoETa-v2,Brazilian-origin dataset
 Broverbs Proverb to History,broverbs_proverb_to_history_greedy,acc,BRoverbs,Brazil / exams / culture,Native,Non-overlap,High,5,"text-understanding, proverbs, brazil",PoETa-v2,Brazilian-origin dataset
-InferBR,inferbr_greedy,acc,InferBR,NLI / text understanding,Native,Non-overlap,High,5,reasoning,PoETa-v2,
+InferBR,inferbr_greedy,acc,InferBR,Reasoning,Native,Non-overlap,High,5,reasoning,PoETa-v2,
 Repro,repro_greedy,acc,Repro,Brazil / exams / culture,Native,Non-overlap,High,5,brazil,PoETa-v2,Brazilian-origin dataset
-Mina BR,mina_br_greedy,acc,Mina,toxicity / social,Native,Non-overlap,High,5,"brazil, social-media, hate-speech",PoETa-v2,Brazilian-origin dataset
-PT Hate Speech,pt_hate_speech_greedy,acc,PT Hate Speech,toxicity / social,Native,Strict,Medium,5,"brazil, social-media, hate-speech",PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
-HateBR Binary,hatebr_binary_greedy,acc,HateBR,toxicity / social,Native,Partial,Low,5,"brazil, social-media, hate-speech",PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
-AGNews,agnews_pt_greedy,acc,AG News,NLI / text understanding,Translated,Non-overlap,High,5,text-understanding,PoETa-v1; PoETa-v2,
-BoolQ,boolq_pt_greedy,acc,BoolQ,NLI / text understanding,Translated,Non-overlap,High,5,general-knowledge,PoETa-v1; PoETa-v2,
-IMDb,imdb_pt_greedy,acc,IMDb,NLI / text understanding,Translated,Non-overlap,High,2,common-sense,PoETa-v1; PoETa-v2,
-Massive,massive_pt_greedy,acc,MASSIVE,NLI / text understanding,Translated,Non-overlap,High,36,common-sense,PoETa-v1; PoETa-v2,Natively multilingual; classified as Translated following PoETa v2 protocol
-MKQA,mkqa_pt_greedy,best_em,MKQA,NLI / text understanding,Translated,Non-overlap,High,40,general-knowledge,PoETa-v1; PoETa-v2,Natively multilingual; classified as Translated following PoETa v2 protocol
-SST-2,sst2_pt_greedy,acc,SST-2,NLI / text understanding,Translated,Non-overlap,High,34,common-sense,PoETa-v1; PoETa-v2,
-WSC-285,wsc285_pt_greedy,acc,WSC-285,NLI / text understanding,Translated,Non-overlap,High,18,common-sense,PoETa-v1; PoETa-v2,
-BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
-BB Code Line Description,bigbench_pt_code_line_description_greedy,acc,BIG-Bench,code / other,Translated,Non-overlap,High,5,code,PoETa-v2,BIG-Bench translated task
-BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
-BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
-BB General Knowledge,bigbench_pt_general_knowledge_greedy,acc,BIG-Bench,NLI / text understanding,Translated,Non-overlap,High,5,general-knowledge,PoETa-v2,BIG-Bench translated task
-BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,acc,BIG-Bench,math,Translated,Non-overlap,High,5,"reasoning, math",PoETa-v2,BIG-Bench translated task
-BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,acc,BIG-Bench,toxicity / social,Translated,Non-overlap,High,5,"common-sense, ethics",PoETa-v2,BIG-Bench translated task
-BB StrategyQA,bigbench_pt_strategyqa_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
-BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,acc,BIG-Bench,NLI / text understanding,Translated,Non-overlap,High,5,text-understanding,PoETa-v2,BIG-Bench translated task
-BB Social IQA,bigbench_pt_social_iqa_greedy,acc,BIG-Bench,NLI / text understanding,Translated,Non-overlap,High,5,common-sense,PoETa-v2,BIG-Bench translated task
-BB Causal Judgment,bigbench_pt_causal_judgment_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,"text-understanding, reasoning",PoETa-v2,BIG-Bench translated task
-BB BBQ,bigbench_pt_bbq_greedy,acc,BIG-Bench,toxicity / social,Translated,Non-overlap,High,5,"text-understanding, ethics",PoETa-v2,BIG-Bench translated task
-BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,acc,BIG-Bench,reasoning,Translated,Non-overlap,High,5,common-sense,PoETa-v2,BIG-Bench translated task
-StoryCloze,storycloze_pt_greedy,acc,StoryCloze,NLI / text understanding,Translated,Non-overlap,High,5,"common-sense, text-understanding",PoETa-v2,
-Math MC,math_mc_greedy,acc,MATH,math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
-GSM8K MC,gsm8k_mc_greedy,acc,GSM8K,math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
-AGIEval SAT Math,agieval_sat_math_greedy,acc,AGIEval,math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
-Balanced COPA,balanced_copa_greedy,acc,COPA,reasoning,Translated,Non-overlap,High,5,"common-sense, reasoning",PoETa-v2,
-LogiQA,logiqa_greedy,acc,LogiQA,reasoning,Translated,Non-overlap,High,5,"text-understanding, reasoning",PoETa-v2,
+Mina BR,mina_br_greedy,acc,Mina,Social / safety,Native,Non-overlap,High,5,"brazil, social-media, hate-speech",PoETa-v2,Brazilian-origin dataset
+PT Hate Speech,pt_hate_speech_greedy,acc,PT Hate Speech,Social / safety,Native,Strict,Medium,5,"brazil, social-media, hate-speech",PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
+HateBR Binary,hatebr_binary_greedy,acc,HateBR,Social / safety,Native,Partial,Low,5,"brazil, social-media, hate-speech",PoETa-v2; PT-Leaderboard; Tucano,Brazilian-origin dataset
+AGNews,agnews_pt_greedy,acc,AG News,Text understanding / QA / classification,Translated,Non-overlap,High,5,text-understanding,PoETa-v1; PoETa-v2,
+BoolQ,boolq_pt_greedy,acc,BoolQ,Text understanding / QA / classification,Translated,Non-overlap,High,5,general-knowledge,PoETa-v1; PoETa-v2,
+IMDb,imdb_pt_greedy,acc,IMDb,Text understanding / QA / classification,Translated,Non-overlap,High,2,common-sense,PoETa-v1; PoETa-v2,
+Massive,massive_pt_greedy,acc,MASSIVE,Text understanding / QA / classification,Translated,Non-overlap,High,36,common-sense,PoETa-v1; PoETa-v2,Natively multilingual; classified as Translated following PoETa v2 protocol
+MKQA,mkqa_pt_greedy,best_em,MKQA,Text understanding / QA / classification,Translated,Non-overlap,High,40,general-knowledge,PoETa-v1; PoETa-v2,Natively multilingual; classified as Translated following PoETa v2 protocol
+SST-2,sst2_pt_greedy,acc,SST-2,Text understanding / QA / classification,Translated,Non-overlap,High,34,common-sense,PoETa-v1; PoETa-v2,
+WSC-285,wsc285_pt_greedy,acc,WSC-285,Reasoning,Translated,Non-overlap,High,18,common-sense,PoETa-v1; PoETa-v2,
+BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
+BB Code Line Description,bigbench_pt_code_line_description_greedy,acc,BIG-Bench,Code / other,Translated,Non-overlap,High,5,code,PoETa-v2,BIG-Bench translated task
+BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
+BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
+BB General Knowledge,bigbench_pt_general_knowledge_greedy,acc,BIG-Bench,Text understanding / QA / classification,Translated,Non-overlap,High,5,general-knowledge,PoETa-v2,BIG-Bench translated task
+BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,acc,BIG-Bench,Math,Translated,Non-overlap,High,5,"reasoning, math",PoETa-v2,BIG-Bench translated task
+BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,acc,BIG-Bench,Social / safety,Translated,Non-overlap,High,5,"common-sense, ethics",PoETa-v2,BIG-Bench translated task
+BB StrategyQA,bigbench_pt_strategyqa_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,reasoning,PoETa-v2,BIG-Bench translated task
+BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,acc,BIG-Bench,Text understanding / QA / classification,Translated,Non-overlap,High,5,text-understanding,PoETa-v2,BIG-Bench translated task
+BB Social IQA,bigbench_pt_social_iqa_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,common-sense,PoETa-v2,BIG-Bench translated task
+BB Causal Judgment,bigbench_pt_causal_judgment_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,"text-understanding, reasoning",PoETa-v2,BIG-Bench translated task
+BB BBQ,bigbench_pt_bbq_greedy,acc,BIG-Bench,Social / safety,Translated,Non-overlap,High,5,"text-understanding, ethics",PoETa-v2,BIG-Bench translated task
+BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,acc,BIG-Bench,Reasoning,Translated,Non-overlap,High,5,common-sense,PoETa-v2,BIG-Bench translated task
+StoryCloze,storycloze_pt_greedy,acc,StoryCloze,Reasoning,Translated,Non-overlap,High,5,"common-sense, text-understanding",PoETa-v2,
+Math MC,math_mc_greedy,acc,MATH,Math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
+GSM8K MC,gsm8k_mc_greedy,acc,GSM8K,Math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
+AGIEval SAT Math,agieval_sat_math_greedy,acc,AGIEval,Math,Translated,Non-overlap,High,5,"math, exams",PoETa-v2,
+Balanced COPA,balanced_copa_greedy,acc,COPA,Reasoning,Translated,Non-overlap,High,5,"common-sense, reasoning",PoETa-v2,
+LogiQA,logiqa_greedy,acc,LogiQA,Reasoning,Translated,Non-overlap,High,5,"text-understanding, reasoning",PoETa-v2,

@@ -57,12 +57,12 @@ class TestSegmentation:
     def test_category_counts(self, seg: pd.DataFrame):
         counts = seg["categoria_paper"].value_counts().to_dict()
         expected = {
-            "NLI / text understanding": 15,
-            "reasoning": 8,
+            "Reasoning": 12,
+            "Text understanding / QA / classification": 11,
             "Brazil / exams / culture": 6,
-            "toxicity / social": 6,
-            "math": 4,
-            "code / other": 1,
+            "Social / safety": 6,
+            "Math": 4,
+            "Code / other": 1,
         }
         assert counts == expected, f"Category counts mismatch: {counts} != {expected}"
 

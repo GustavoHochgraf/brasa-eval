@@ -37,20 +37,20 @@ plt.rcParams.update({
 
 CATEGORY_ORDER = [
     "Brazil / exams / culture",
-    "toxicity / social",
-    "NLI / text understanding",
-    "reasoning",
-    "math",
-    "code / other",
+    "Social / safety",
+    "Text understanding / QA / classification",
+    "Reasoning",
+    "Math",
+    "Code / other",
 ]
 
 CATEGORY_SHORT = {
     "Brazil / exams / culture": "Brazil/Exams",
-    "toxicity / social": "Toxicity/Social",
-    "NLI / text understanding": "NLI/TextUnd.",
-    "reasoning": "Reasoning",
-    "math": "Math",
-    "code / other": "Code/Other",
+    "Social / safety": "Social/Safety",
+    "Text understanding / QA / classification": "TextUnd./QA",
+    "Reasoning": "Reasoning",
+    "Math": "Math",
+    "Code / other": "Code/Other",
 }
 
 COLORS_CHECKPOINTS = ["#4878d0", "#ee854a", "#6acc64", "#d65f5f", "#956cb4"]
