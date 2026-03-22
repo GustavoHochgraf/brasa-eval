@@ -1,0 +1,19 @@
+{
+  "checkpoint": "TuQwen3-Base-LR1e5-run1",
+  "n_tasks": 40,
+  "n_missing": 0,
+  "all_score": 0.6609,
+  "native_score": 0.6902,
+  "translated_score": 0.6451,
+  "n_native": 14,
+  "n_translated": 26,
+  "category_scores": {
+    "Brazil / exams / culture": 0.63,
+    "NLI / text understanding": 0.7092,
+    "code / other": 0.9667,
+    "math": 0.5299,
+    "reasoning": 0.5779,
+    "toxicity / social": 0.7181
+  },
+  "missing_tasks": []
+}

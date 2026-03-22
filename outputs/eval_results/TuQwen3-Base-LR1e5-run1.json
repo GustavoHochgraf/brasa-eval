@@ -1,0 +1,186 @@
+{
+  "results": {
+    "agieval_sat_math_greedy": {
+      "acc": 0.4818181818181818
+    },
+    "agnews_pt_greedy": {
+      "acc": 0.8433333333333333,
+      "f1-macro": 0.8395960477394507,
+      "f1-weighted": 0.8417809852283866
+    },
+    "assin_rte_greedy": {
+      "acc": 0.9066666666666667,
+      "f1": 0.9066625183341482
+    },
+    "assin_sts_greedy": {
+      "mse": 1.1327552514244745,
+      "pearson": 0.5707472534409384,
+      "unknown_pred": 0.0
+    },
+    "balanced_copa_greedy": {
+      "acc": 0.85
+    },
+    "bigbench_pt_analogical_similarity_greedy": {
+      "acc": 0.27666666666666667
+    },
+    "bigbench_pt_bbq_greedy": {
+      "acc": 0.7266666666666667
+    },
+    "bigbench_pt_causal_judgment_greedy": {
+      "acc": 0.5684210526315789
+    },
+    "bigbench_pt_cause_and_effect_two_sentences_greedy": {
+      "acc": 0.7647058823529411
+    },
+    "bigbench_pt_code_line_description_greedy": {
+      "acc": 0.9666666666666667
+    },
+    "bigbench_pt_empirical_judgments_greedy": {
+      "acc": 0.6060606060606061
+    },
+    "bigbench_pt_formal_fallacies_syllogisms_negation_greedy": {
+      "acc": 0.5166666666666667
+    },
+    "bigbench_pt_general_knowledge_greedy": {
+      "acc": 0.8428571428571429
+    },
+    "bigbench_pt_mathematical_induction_greedy": {
+      "acc": 0.7142857142857143
+    },
+    "bigbench_pt_simple_ethical_questions_greedy": {
+      "acc": 0.8608695652173913
+    },
+    "bigbench_pt_social_iqa_greedy": {
+      "acc": 0.6066666666666667
+    },
+    "bigbench_pt_strategyqa_greedy": {
+      "acc": 0.62
+    },
+    "bigbench_pt_vitaminc_fact_verification_greedy": {
+      "acc": 0.6166666666666667
+    },
+    "bluex_greedy": {
+      "acc": 0.5166872682323856,
+      "acc_norm": 0.5327564894932015,
+      "UNICAMP": 0.501187648456057,
+      "biology": 0.7349397590361446,
+      "2022": 0.5454545454545454,
+      "mathematics": 0.26515151515151514,
+      "2018": 0.4778761061946903,
+      "USP": 0.5335051546391752,
+      "2021": 0.5067567567567568,
+      "BK": 0.6299212598425197,
+      "portuguese": 0.5598086124401914,
+      "2020": 0.5405405405405406,
+      "2019": 0.4943820224719101,
+      "history": 0.710691823899371,
+      "physics": 0.27848101265822783,
+      "2024": 0.5930232558139535,
+      "geography": 0.6052631578947368,
+      "philosophy": 0.6363636363636364,
+      "english": 0.6142857142857143,
+      "2023": 0.5747126436781609,
+      "chemistry": 0.40384615384615385
+    },
+    "boolq_pt_greedy": {
+      "acc": 0.52
+    },
+    "broverbs_history_to_proverb_greedy": {
+      "acc": 0.5533333333333333
+    },
+    "broverbs_proverb_to_history_greedy": {
+      "acc": 0.43333333333333335
+    },
+    "enem2022_greedy": {
+      "acc": 0.5932203389830508,
+      "2022": 0.5932203389830508,
+      "unknown_pred": 0.0,
+      "human-sciences": 0.7297297297297297,
+      "mathematics": 0.18181818181818182,
+      "natural-sciences": 0.6153846153846154,
+      "languages": 0.696969696969697
+    },
+    "enem_greedy": {
+      "acc": 0.7106986899563319,
+      "2009": 0.7640449438202247,
+      "unknown_pred": 0.0,
+      "2016": 0.6808510638297872,
+      "2015": 0.7415730337078652,
+      "2016_2_": 0.6989247311827957,
+      "2017": 0.6853932584269663,
+      "2013": 0.6470588235294118,
+      "2012": 0.6847826086956522,
+      "2011": 0.8125,
+      "2010": 0.6666666666666666,
+      "2014": 0.7241379310344828
+    },
+    "faquad_nli_greedy": {
+      "exact": 0.5873015873015873,
+      "f1": 0.8473126727252659
+    },
+    "gsm8k_mc_greedy": {
+      "acc": 0.41333333333333333
+    },
+    "hatebr_binary_greedy": {
+      "acc": 0.8,
+      "f1-macro": 0.797077922077922,
+      "f1-weighted": 0.7993506493506495
+    },
+    "imdb_pt_greedy": {
+      "acc": 0.87
+    },
+    "inferbr_greedy": {
+      "acc": 0.8366666666666667
+    },
+    "logiqa_greedy": {
+      "acc": 0.4208754208754209
+    },
+    "massive_pt_greedy": {
+      "acc": 0.6933333333333332,
+      "f1-macro": 0.6960258808533436,
+      "f1-weighted": 0.7024031843916357
+    },
+    "math_mc_greedy": {
+      "acc": 0.51
+    },
+    "mina_br_greedy": {
+      "acc": 0.6866666666666666
+    },
+    "mkqa_pt_greedy": {
+      "best_em": 0.11,
+      "best_f1": 0.1635,
+      "best_answerable_em": 0.11,
+      "best_answerable_f1": 0.1635,
+      "best_unanswerable_em": NaN,
+      "best_f1_threshold": 0.0
+    },
+    "pt_hate_speech_greedy": {
+      "acc": 0.6966666666666667,
+      "f1-macro": 0.6196447230929989,
+      "f1-weighted": 0.6835444096133751
+    },
+    "repro_greedy": {
+      "acc": 0.9566666666666667
+    },
+    "sst2_pt_greedy": {
+      "acc": 0.8966666666666666
+    },
+    "storycloze_pt_greedy": {
+      "acc": 0.8766666666666667,
+      "f1-macro": 0.8765555666766757,
+      "f1-weighted": 0.8763580555833584
+    },
+    "tweetsentbr_greedy": {
+      "acc": 0.5375,
+      "f1-macro": 0.49694749694749696,
+      "f1-weighted": 0.46873959373959373
+    },
+    "wsc285_pt_greedy": {
+      "acc": 0.6
+    }
+  },
+  "config": {
+    "model": "ggg-llms-team/TuQwen3-Base-LR1e5-run1",
+    "source": "TuQwen-eval-PoETaV2"
+  }
+}

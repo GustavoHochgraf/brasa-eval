@@ -1,0 +1,19 @@
+{
+  "checkpoint": "Qwen3-1.7B-Base",
+  "n_tasks": 40,
+  "n_missing": 0,
+  "all_score": 0.6655,
+  "native_score": 0.6862,
+  "translated_score": 0.6544,
+  "n_native": 14,
+  "n_translated": 26,
+  "category_scores": {
+    "Brazil / exams / culture": 0.6228,
+    "NLI / text understanding": 0.7237,
+    "code / other": 0.9667,
+    "math": 0.5238,
+    "reasoning": 0.5712,
+    "toxicity / social": 0.7328
+  },
+  "missing_tasks": []
+}

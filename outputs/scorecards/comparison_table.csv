@@ -1,0 +1,4 @@
+checkpoint,n_tasks,all_score,native_score,translated_score,Brazil / exams / culture,NLI / text understanding,code / other,math,reasoning,toxicity / social
+Qwen3-1.7B-Base,40,0.6655,0.6862,0.6544,0.6228,0.7237,0.9667,0.5238,0.5712,0.7328
+QwenRolina3-Base,40,0.658,0.6891,0.6412,0.6461,0.7002,0.9667,0.5096,0.5766,0.7204
+TuQwen3-Base-LR1e5-run1,40,0.6609,0.6902,0.6451,0.63,0.7092,0.9667,0.5299,0.5779,0.7181

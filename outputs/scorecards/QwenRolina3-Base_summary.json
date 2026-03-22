@@ -1,0 +1,19 @@
+{
+  "checkpoint": "QwenRolina3-Base",
+  "n_tasks": 40,
+  "n_missing": 0,
+  "all_score": 0.658,
+  "native_score": 0.6891,
+  "translated_score": 0.6412,
+  "n_native": 14,
+  "n_translated": 26,
+  "category_scores": {
+    "Brazil / exams / culture": 0.6461,
+    "NLI / text understanding": 0.7002,
+    "code / other": 0.9667,
+    "math": 0.5096,
+    "reasoning": 0.5766,
+    "toxicity / social": 0.7204
+  },
+  "missing_tasks": []
+}
