@@ -4,6 +4,11 @@
 Reads the TaskMap Excel (44 tasks from Table 3) and the Tucano/PT overlap
 spreadsheet, then produces a deterministic CSV with paper-oriented columns.
 
+4 tasks are excluded because their datasets are private to Maritaca AI:
+POSComp, ARC Challenge, ARC Easy, Ethics Commonsense.
+
+Final output: 40 tasks (14 Native + 26 Translated).
+
 Usage:
     python scripts/build_paper_segmentation.py
     python scripts/build_paper_segmentation.py --taskmap path/to/TaskMap.xlsx --overlap path/to/overlap.xlsx
@@ -21,6 +26,22 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
+# Tasks excluded from the benchmark (private Maritaca AI datasets)
+# ---------------------------------------------------------------------------
+EXCLUDED_TASKS = {"POSComp", "ARC Challenge", "ARC Easy", "Ethics Commonsense"}
+
+# ---------------------------------------------------------------------------
+# Explicit metric per task (must match what lm-eval-harness actually reports)
+# ---------------------------------------------------------------------------
+TASK_METRIC: dict[str, str] = {
+    "Assin STS": "pearson",
+    "BLUEX": "acc_norm",
+    "Faquad": "f1",
+    "MKQA": "best_em",
+}
+DEFAULT_METRIC = "acc"
+
+# ---------------------------------------------------------------------------
 # Canonical paper category mapping (deterministic, one per task)
 # Categories: Brazil / exams / culture | toxicity / social |
 #             NLI / text understanding | reasoning | math | code / other
@@ -33,7 +54,7 @@ CATEGORIA_PAPER: dict[str, str] = {
     "Broverbs History to Proverb": "Brazil / exams / culture",
     "Broverbs Proverb to History": "Brazil / exams / culture",
     "Repro": "Brazil / exams / culture",
-    "POSComp": "Brazil / exams / culture",
+    # POSComp excluded (private Maritaca AI dataset)
     # --- Native: toxicity / social ---
     "TweetsentBR": "toxicity / social",
     "Mina BR": "toxicity / social",
@@ -49,7 +70,7 @@ CATEGORIA_PAPER: dict[str, str] = {
     "BoolQ": "NLI / text understanding",
     "IMDb": "NLI / text understanding",
     "Massive": "NLI / text understanding",
-    "MKOA": "NLI / text understanding",
+    "MKQA": "NLI / text understanding",
     "SST-2": "NLI / text understanding",
     "WSC-285": "NLI / text understanding",
     "StoryCloze": "NLI / text understanding",
@@ -59,7 +80,7 @@ CATEGORIA_PAPER: dict[str, str] = {
     # --- Translated: toxicity / social ---
     "BB Simple Ethical Questions": "toxicity / social",
     "BB BBQ": "toxicity / social",
-    "Ethics Commonsense": "toxicity / social",
+    # Ethics Commonsense excluded (private Maritaca AI dataset)
     # --- Translated: reasoning ---
     "BB Analogical Similarity": "reasoning",
     "BB Empirical Judgments": "reasoning",
@@ -67,8 +88,7 @@ CATEGORIA_PAPER: dict[str, str] = {
     "BB StrategyQA": "reasoning",
     "BB Causal Judgment": "reasoning",
     "BB Cause and Effect": "reasoning",
-    "ARC Challenge": "reasoning",
-    "ARC Easy": "reasoning",
+    # ARC Challenge, ARC Easy excluded (private Maritaca AI datasets)
     "Balanced COPA": "reasoning",
     "LogiQA": "reasoning",
     # --- Translated: math ---
@@ -98,18 +118,16 @@ LM_EVAL_TASK: dict[str, str] = {
     "Mina BR": "mina_br_greedy",
     "PT Hate Speech": "pt_hate_speech_greedy",
     "HateBR Binary": "hatebr_binary_greedy",
-    "POSComp": "poscomp_greedy",
+    # POSComp excluded
     "AGNews": "agnews_pt_greedy",
     "BoolQ": "boolq_pt_greedy",
     "IMDb": "imdb_pt_greedy",
     "Massive": "massive_pt_greedy",
-    "MKOA": "mkqa_pt_greedy",
+    "MKQA": "mkqa_pt_greedy",
     "SST-2": "sst2_pt_greedy",
     "WSC-285": "wsc285_pt_greedy",
     "StoryCloze": "storycloze_pt_greedy",
-    "ARC Challenge": "arc_challenge_greedy_pt",
-    "ARC Easy": "arc_easy_greedy_pt",
-    "Ethics Commonsense": "ethics_commonsense_test_hard_greedy",
+    # ARC Challenge, ARC Easy, Ethics Commonsense excluded
     "Math MC": "math_mc_greedy",
     "GSM8K MC": "gsm8k_mc_greedy",
     "AGIEval SAT Math": "agieval_sat_math_greedy",
@@ -148,18 +166,16 @@ BENCHMARK_ORIGEM: dict[str, str] = {
     "Mina BR": "Mina",
     "PT Hate Speech": "PT Hate Speech",
     "HateBR Binary": "HateBR",
-    "POSComp": "POSComp",
+    # POSComp excluded
     "AGNews": "AG News",
     "BoolQ": "BoolQ",
     "IMDb": "IMDb",
     "Massive": "MASSIVE",
-    "MKOA": "MKQA",
+    "MKQA": "MKQA",
     "SST-2": "SST-2",
     "WSC-285": "WSC-285",
     "StoryCloze": "StoryCloze",
-    "ARC Challenge": "ARC",
-    "ARC Easy": "ARC",
-    "Ethics Commonsense": "ETHICS",
+    # ARC Challenge, ARC Easy, Ethics Commonsense excluded
     "Math MC": "MATH",
     "GSM8K MC": "GSM8K",
     "AGIEval SAT Math": "AGIEval",
@@ -226,12 +242,12 @@ TASKMAP_TO_OVERLAP: dict[str, str] = {
     "BoolQ": "BoolQ-PT",
     "IMDb": "IMDB-PT",
     "Massive": "MASSIVE-PT",
-    "MKOA": "MKQA-PT",
+    "MKQA": "MKQA-PT",
     "SST-2": "SST2-PT",
     "WSC-285": "WSC285-PT",
     "BB Causal Judgment": "BB: Causal Judgment",
     "LogiQA": "LogiQA-PT",
-    "ARC Challenge": "ARC-Challenge-PT",
+    # ARC Challenge excluded
 }
 
 
@@ -265,6 +281,10 @@ def build_segmentation(
     log.info("TaskMap loaded: %d tasks", len(tm))
     assert len(tm) == 44, f"Expected 44 tasks, got {len(tm)}"
 
+    # --- Exclude private Maritaca AI datasets ---
+    tm = tm[~tm["Dataset"].str.strip().isin(EXCLUDED_TASKS)].copy()
+    log.info("After excluding %d private tasks: %d tasks remain", len(EXCLUDED_TASKS), len(tm))
+
     # --- Load overlap index ---
     overlap_idx = _build_overlap_index(overlap_path)
     log.info("Overlap index: %d entries", len(overlap_idx))
@@ -272,6 +292,9 @@ def build_segmentation(
     rows: list[dict] = []
     for _, r in tm.iterrows():
         task = str(r["Dataset"]).strip()
+        # Rename MKOA -> MKQA (typo in original TaskMap)
+        if task == "MKOA":
+            task = "MKQA"
         few_shot = int(r["Few-Shot"])
         translated_raw = str(r["Translated"]).strip()
         native_translated = "Translated" if translated_raw.lower() in ("yes", "true", "1", "sim") else "Native"
@@ -307,12 +330,16 @@ def build_segmentation(
             notes = "BIG-Bench translated task"
         if native_translated == "Native" and "brazil" in original_subcategories.lower():
             notes = "Brazilian-origin dataset"
-        if task in ("Massive", "MKOA"):
-            notes = "Natively multilingual (not translated from EN)"
+        if task in ("Massive", "MKQA"):
+            notes = "Natively multilingual; classified as Translated following PoETa v2 protocol"
+
+        # Explicit metric per task
+        metric = TASK_METRIC.get(task, DEFAULT_METRIC)
 
         rows.append({
             "task": task,
             "lm_eval_task": lm_eval,
+            "metric": metric,
             "benchmark_origem": origem,
             "categoria_paper": cat,
             "native_translated": native_translated,
@@ -327,6 +354,13 @@ def build_segmentation(
     df = pd.DataFrame(rows)
 
     # --- Validation ---
+    assert len(df) == 40, f"Expected 40 tasks after exclusion, got {len(df)}"
+
+    n_native = (df["native_translated"] == "Native").sum()
+    n_translated = (df["native_translated"] == "Translated").sum()
+    assert n_native == 14, f"Expected 14 Native tasks, got {n_native}"
+    assert n_translated == 26, f"Expected 26 Translated tasks, got {n_translated}"
+
     assert set(df["native_translated"]) <= {"Native", "Translated"}
     assert set(df["overlap_class"]) <= {"Strict", "Partial", "Non-overlap"}
     assert set(df["comparability"]) <= {"High", "Medium", "Low"}
@@ -340,11 +374,12 @@ def build_segmentation(
     }
     actual_cats = set(df["categoria_paper"])
     assert actual_cats <= expected_cats, f"Unexpected categories: {actual_cats - expected_cats}"
+    assert set(df["metric"]) <= {"acc", "acc_norm", "pearson", "f1", "best_em"}, \
+        f"Unexpected metrics: {set(df['metric'])}"
 
-    log.info("Segmentation built: %d tasks", len(df))
-    log.info("  Native: %d, Translated: %d", (df["native_translated"] == "Native").sum(), (df["native_translated"] == "Translated").sum())
+    log.info("Segmentation built: %d tasks (14 Native + 26 Translated)", len(df))
     log.info("  Categories: %s", df["categoria_paper"].value_counts().to_dict())
-    log.info("  Overlap: %s", df["overlap_class"].value_counts().to_dict())
+    log.info("  Metrics: %s", df["metric"].value_counts().to_dict())
 
     return df
 
@@ -380,11 +415,6 @@ def main() -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_path, index=False)
     log.info("Wrote: %s", out_path)
-
-    # Also write JSON for programmatic use
-    out_json = out_path.with_suffix(".json")
-    df.to_json(out_json, orient="records", indent=2, force_ascii=False)
-    log.info("Wrote: %s", out_json)
 
 
 if __name__ == "__main__":

@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -33,27 +34,25 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Preferred metric resolution order per task
-# ---------------------------------------------------------------------------
-METRIC_PREFERENCE = ["acc_norm", "acc", "f1_macro", "f1", "exact_match", "pearson"]
 
+def _resolve_metric(
+    task_results: dict[str, float],
+    lm_eval_task: str,
+    expected_metric: str,
+) -> tuple[str, float] | None:
+    """Find the expected metric in task results.
 
-def _resolve_metric(task_results: dict[str, float], lm_eval_task: str) -> tuple[str, float] | None:
-    """Find best available metric for a task's results."""
-    for m in METRIC_PREFERENCE:
-        # lm-eval-harness may prefix metric with task name or use comma variants
-        for key, val in task_results.items():
-            # Strip common prefixes/suffixes
-            clean = key.replace(",none", "").split(",")[0].strip()
-            if clean == m:
-                return m, float(val)
-    # Fallback: take first numeric value
+    Uses the explicit metric from the segmentation CSV — no fallback.
+    lm-eval-harness may use comma-suffixed keys like 'acc,none'.
+    """
     for key, val in task_results.items():
-        try:
-            return key, float(val)
-        except (ValueError, TypeError):
-            continue
+        clean = key.replace(",none", "").split(",")[0].strip()
+        if clean == expected_metric:
+            return expected_metric, float(val)
+    log.error(
+        "Expected metric '%s' not found for %s. Available: %s",
+        expected_metric, lm_eval_task, list(task_results.keys()),
+    )
     return None
 
 
@@ -83,23 +82,23 @@ def build_scorecard(
         (task_scores_df, summary_dict)
     """
     rows: list[dict] = []
-    skipped: list[str] = []
+    missing: list[str] = []
 
     for _, task_row in seg.iterrows():
         task_name = task_row["task"]
         lm_eval = task_row["lm_eval_task"]
         cat = task_row["categoria_paper"]
         nt = task_row["native_translated"]
+        expected_metric = task_row["metric"]
 
         if not lm_eval or lm_eval not in results:
-            skipped.append(task_name)
+            missing.append(task_name)
             continue
 
         task_results = results[lm_eval]
-        resolved = _resolve_metric(task_results, lm_eval)
+        resolved = _resolve_metric(task_results, lm_eval, expected_metric)
         if resolved is None:
-            skipped.append(task_name)
-            log.warning("No usable metric for %s (%s)", task_name, lm_eval)
+            missing.append(task_name)
             continue
 
         metric_name, score = resolved
@@ -113,8 +112,12 @@ def build_scorecard(
             "score": score,
         })
 
-    if skipped:
-        log.info("[%s] Skipped %d tasks (not in results): %s", checkpoint_name, len(skipped), ", ".join(skipped[:10]))
+    if missing:
+        log.error(
+            "[%s] MISSING %d tasks (not in results or metric not found): %s",
+            checkpoint_name, len(missing), ", ".join(missing),
+        )
+        sys.exit(1)
 
     df = pd.DataFrame(rows)
     if df.empty:
@@ -135,14 +138,14 @@ def build_scorecard(
     summary = {
         "checkpoint": checkpoint_name,
         "n_tasks": len(df),
-        "n_skipped": len(skipped),
+        "n_missing": 0,
         "all_score": round(all_score, 4),
         "native_score": round(native_score, 4) if native_score is not None else None,
         "translated_score": round(translated_score, 4) if translated_score is not None else None,
         "n_native": int(native_mask.sum()),
         "n_translated": int(translated_mask.sum()),
         "category_scores": {k: round(v, 4) for k, v in sorted(cat_scores.items())},
-        "skipped_tasks": skipped,
+        "missing_tasks": [],
     }
 
     return df, summary
@@ -212,8 +215,7 @@ def main() -> None:
 
     if not results_dir.exists():
         log.error("Results directory not found: %s", results_dir)
-        log.info("Creating sample result files for demonstration...")
-        _create_sample_results(results_dir, seg)
+        sys.exit(1)
 
     # Discover result files
     result_files = sorted(results_dir.glob("*.json"))
@@ -290,40 +292,6 @@ def main() -> None:
         log.info("Wrote: %s", out_dir / "task_deltas.csv")
 
     log.info("Done. Scorecards in %s", out_dir)
-
-
-def _create_sample_results(results_dir: Path, seg: pd.DataFrame) -> None:
-    """Create synthetic sample results for demonstration/testing."""
-    import random
-    random.seed(42)
-
-    results_dir.mkdir(parents=True, exist_ok=True)
-
-    checkpoints = [
-        ("Qwen-1.7B-Base", 0.30),
-        ("TuQwen-1.7B-Base", 0.35),
-        ("TuQwen-1.7B-Base-0.87ep", 0.33),
-    ]
-
-    for cp_name, base_score in checkpoints:
-        results: dict[str, dict[str, float]] = {}
-        for _, row in seg.iterrows():
-            lm_eval = row["lm_eval_task"]
-            if not lm_eval:
-                continue
-            # Synthetic score: base + noise + bonus for Native tasks in TuQwen
-            score = base_score + random.gauss(0, 0.08)
-            if "TuQwen" in cp_name and row["native_translated"] == "Native":
-                score += 0.05  # simulate PT training benefit
-            if "0.87ep" in cp_name and row["native_translated"] == "Translated":
-                score -= 0.03  # simulate slight translated regression
-            score = max(0.0, min(1.0, score))
-            results[lm_eval] = {"acc": round(score, 4)}
-
-        out_path = results_dir / f"{cp_name}.json"
-        with open(out_path, "w", encoding="utf-8") as f:
-            json.dump({"results": results}, f, indent=2)
-        log.info("Created sample: %s", out_path)
 
 
 if __name__ == "__main__":

@@ -158,7 +158,7 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 - Framework: lm-eval-harness com tarefas PoETa v2
 - Modo de prompt: `dynamic-random` (few-shot com exemplos aleatorios)
 - Few-shot: varia por tarefa (1 a 40 shots)
-- Metrica primaria: `acc` (acuracia) para maioria; `pearson` para ASSIN STS; `best_em` para MKQA; `f1` para FaQuAD
+- Metrica primaria: `acc` para maioria; `acc_norm` para BLUEX; `pearson` para ASSIN STS; `best_em` para MKQA; `f1` para FaQuAD
 - Limite de exemplos: 300 para maioria das tarefas
 
 ---
@@ -211,7 +211,9 @@ brasa-eval/
 ├── configs/
 │   └── poeta_v2_full_diagnostic.json # Config completa das 40 tarefas
 ├── data/
-│   └── paper_final_segmentation.csv  # Tabela mestre: tarefas, categorias, native/translated
+│   └── paper_final_segmentation.csv  # Tabela mestre: tarefas, categorias, metricas, native/translated
+├── tests/
+│   └── test_integrity.py            # Testes de integridade (40 tarefas, metricas, scores README)
 └── outputs/
     ├── eval_results/                 # JSONs de resultado por checkpoint
     ├── scorecards/                   # Tabelas comparativas (CSVs)
