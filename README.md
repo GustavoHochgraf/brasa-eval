@@ -142,13 +142,54 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 - **Linguas (ENEM 2022 Languages, BLUEX English)** caem com TuQwen (-6.1 pp e -4.3 pp), indicando que o treinamento em portugues reduz capacidade em ingles.
 - **Ciencias exatas (Fisica, Quimica)** apresentam efeitos mistos ou negativos, sugerindo que pretraining linguistico nao beneficia raciocinio formal/simbolico.
 
+### Analise por tags originais PoETa
+
+Alem do agrupamento manual em 6 categorias diagnosticas, o PoETa v2 possui uma taxonomia nativa de subcategorias **multi-label** (e.g., uma task pode ser simultaneamente "reasoning" e "math"). A analise abaixo preserva essa estrutura multi-label: cada task contribui para a media de **cada tag a que pertence**.
+
+O benchmark utiliza 12 tags originais. A tabela inclui o split Native/Translated por tag e os deltas vs. baseline (Qwen Base):
+
+| Tag original | # Tasks | Nat. | Trad. | Qwen Base | TuQwen | Delta TuQwen | QwenRolina | Delta QwenRolina |
+|:-------------|:-------:|:----:|:-----:|:---------:|:------:|:------------:|:----------:|:----------------:|
+| code | 1 | 0 | 1 | **0.9667** | **0.9667** | 0.0 pp | **0.9667** | 0.0 pp |
+| ethics | 2 | 0 | 2 | **0.8218** | 0.7938 | -2.8 pp | 0.7941 | -2.8 pp |
+| common-sense | 10 | 1 | 9 | **0.7666** | 0.7590 | -0.8 pp | 0.7476 | -1.9 pp |
+| hate-speech | 3 | 3 | 0 | **0.7344** | 0.7278 | -0.7 pp | 0.7322 | -0.2 pp |
+| social-media | 4 | 4 | 0 | **0.6883** | 0.6802 | -0.8 pp | 0.6835 | -0.5 pp |
+| text-understanding | 9 | 3 | 6 | **0.6602** | 0.6541 | -0.6 pp | 0.6385 | -2.2 pp |
+| brazil | 10 | 10 | 0 | 0.6490 | 0.6501 | +0.1 pp | **0.6611** | **+1.2 pp** |
+| reasoning | 10 | 2 | 8 | 0.6156 | **0.6316** | **+1.6 pp** | 0.6185 | +0.3 pp |
+| general-knowledge | 3 | 0 | 3 | **0.5479** | 0.4910 | **-5.7 pp** | 0.5259 | -2.2 pp |
+| exams | 6 | 3 | 3 | 0.5469 | 0.5403 | -0.7 pp | **0.5575** | +1.1 pp |
+| math | 4 | 0 | 4 | 0.5238 | **0.5299** | +0.6 pp | 0.5096 | -1.4 pp |
+| proverbs | 2 | 2 | 0 | 0.4733 | 0.4933 | +2.0 pp | **0.5100** | **+3.7 pp** |
+
+**Observacoes:**
+- **Tags puramente nativas** (`brazil`, `hate-speech`, `social-media`, `proverbs`) sao as unicas onde o continued pretraining nao causa quedas expressivas — confirmando que o beneficio do treinamento em portugues se concentra em conteudo nativo.
+- **`proverbs`** (+3.7 pp QwenRolina) e **`brazil`** (+1.2 pp QwenRolina) sao as tags com maiores ganhos do Carolina, consistente com o corpus conter conteudo cultural brasileiro.
+- **`reasoning`** e a tag com maior ganho do TuQwen (+1.6 pp), confirmando que o GigaVerbo (100B tokens, mais diverso) beneficia raciocinio.
+- **`general-knowledge`** sofre a maior queda absoluta (-5.7 pp TuQwen), indicando possivel catastrophic forgetting em conhecimento factual apos continued pretraining.
+- **Tags traduzidas de alta performance** (`ethics`, `common-sense`) caem sistematicamente em ambos os modelos, reforçando o trade-off Native vs. Translated.
+- **`code`** apresenta efeito teto (96.7%) — unica task, sem variacao entre checkpoints.
+
+#### Heatmap por tag original
+
+![Heatmap de scores por tag original PoETa](outputs/figures/original_tag_breakdown_heatmap.png)
+
+#### Barras por tag original
+
+![Score por tag original por checkpoint](outputs/figures/original_tag_breakdown_by_checkpoint.png)
+
+**Nota metodologica:** Como as tags sao multi-label, as medias por tag **nao sao mutuamente exclusivas** — a soma das contagens de tasks (64 pares task-tag) excede o total de 40 tasks. Para detalhes, ver `outputs/scorecards/original_tag_analysis_note.md` e `data/original_poeta_tag_expanded.csv`.
+
+**Relacao entre taxonomias:** O agrupamento manual do paper (6 categorias, single-label) e uma camada interpretativa mais grossa sobre a taxonomia original PoETa (12 tags, multi-label). Ambas sao uteis para propositos diferentes: as tags originais revelam estrutura fina do benchmark; as categorias manuais facilitam a discussao sobre trade-offs de treinamento. O mapeamento completo esta em `data/manual_vs_original_taxonomy_map.csv`.
+
 ---
 
 ## Setup do benchmark
 
 ### Tarefas PoETa v2
 
-40 tarefas avaliadas, organizadas em 6 categorias de capacidade. A tabela abaixo explicita o agrupamento completo (fonte: `data/paper_final_segmentation.csv`):
+40 tarefas avaliadas, organizadas em 6 categorias de capacidade (agrupamento manual orientado ao paper — nao clustering). A tabela abaixo explicita o agrupamento completo (fonte: `data/paper_final_segmentation.csv`):
 
 | Categoria | Tarefa | Origem | Metrica | Notas |
 |:----------|:-------|:------:|:-------:|:------|
@@ -244,6 +285,9 @@ python scripts/plot_paper_figures.py
 
 # Drill-down ENEM/BLUEX por subarea
 python scripts/analyze_enem_bluex_subareas.py
+
+# Analise por tags originais PoETa (multi-label)
+python scripts/analyze_original_tags.py
 ```
 
 ---
@@ -257,11 +301,15 @@ brasa-eval/
 │   ├── build_paper_segmentation.py   # Constroi tabela de metadados das 40 tarefas
 │   ├── generate_scorecards.py        # Gera All/Native/Translated + categorias
 │   ├── plot_paper_figures.py         # Gera figuras principais (PNG/PDF)
-│   └── analyze_enem_bluex_subareas.py # Drill-down ENEM/BLUEX por subarea
+│   ├── analyze_enem_bluex_subareas.py # Drill-down ENEM/BLUEX por subarea
+│   └── analyze_original_tags.py      # Analise por tags originais PoETa (multi-label)
 ├── configs/
 │   └── poeta_v2_full_diagnostic.json # Config completa das 40 tarefas
 ├── data/
-│   └── paper_final_segmentation.csv  # Tabela mestre: tarefas, categorias, metricas, native/translated
+│   ├── paper_final_segmentation.csv  # Tabela mestre: tarefas, categorias, metricas, native/translated
+│   ├── original_poeta_tag_expanded.csv # Tags originais expandidas (1 linha por task x tag)
+│   ├── original_poeta_tag_summary.csv  # Contagem por tag original
+│   └── manual_vs_original_taxonomy_map.csv # Mapeamento entre taxonomias
 ├── tests/
 │   └── test_integrity.py            # Testes de integridade (40 tarefas, metricas, scores README)
 └── outputs/

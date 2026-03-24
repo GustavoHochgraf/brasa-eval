@@ -1,0 +1,13 @@
+original_tag,n_tasks,n_native,n_translated,tasks
+brazil,10,10,0,BLUEX; Broverbs History to Proverb; Broverbs Proverb to History; Enem; Enem 2022; HateBR Binary; Mina BR; PT Hate Speech; Repro; TweetsentBR
+common-sense,10,1,9,Assin STS; BB Cause and Effect; BB Simple Ethical Questions; BB Social IQA; Balanced COPA; IMDb; Massive; SST-2; StoryCloze; WSC-285
+reasoning,10,2,8,Assin RTE; BB Analogical Similarity; BB Causal Judgment; BB Empirical Judgments; BB Fallacies Syllogisms; BB Mathematical Induction; BB StrategyQA; Balanced COPA; InferBR; LogiQA
+text-understanding,9,3,6,AGNews; BB BBQ; BB Causal Judgment; BB VitaminC Fact Verification; Broverbs History to Proverb; Broverbs Proverb to History; Faquad; LogiQA; StoryCloze
+exams,6,3,3,AGIEval SAT Math; BLUEX; Enem; Enem 2022; GSM8K MC; Math MC
+math,4,0,4,AGIEval SAT Math; BB Mathematical Induction; GSM8K MC; Math MC
+social-media,4,4,0,HateBR Binary; Mina BR; PT Hate Speech; TweetsentBR
+general-knowledge,3,0,3,BB General Knowledge; BoolQ; MKQA
+hate-speech,3,3,0,HateBR Binary; Mina BR; PT Hate Speech
+ethics,2,0,2,BB BBQ; BB Simple Ethical Questions
+proverbs,2,2,0,Broverbs History to Proverb; Broverbs Proverb to History
+code,1,0,1,BB Code Line Description
