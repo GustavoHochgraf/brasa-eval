@@ -84,6 +84,21 @@ SUBAREA_DISPLAY = {
     "philosophy": "Philosophy",
 }
 
+SUBAREA_DISPLAY_COMPACT = {
+    "human-sciences": "Human Sci.",
+    "mathematics": "Math",
+    "natural-sciences": "Natural Sci.",
+    "languages": "Languages",
+    "history": "History",
+    "geography": "Geog.",
+    "biology": "Biology",
+    "chemistry": "Chem.",
+    "physics": "Physics",
+    "portuguese": "Port.",
+    "english": "English",
+    "philosophy": "Phil.",
+}
+
 # ── Helpers ───────────────────────────────────────────────────────────
 
 def load_results(results_dir: Path, checkpoint: str) -> dict:
@@ -262,7 +277,7 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
     tasks_ordered = ["ENEM 2022", "BLUEX"]
 
     for ext in ["png", "pdf"]:
-        fig, axes = plt.subplots(1, 2, figsize=(14, 5), sharey=True)
+        fig, axes = plt.subplots(1, 2, figsize=(14, 4.1), sharey=True)
         if len(tasks_ordered) == 1:
             axes = [axes]
 
@@ -274,6 +289,8 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
                 .pivot(index="subarea", columns="checkpoint", values="score")
                 .reindex(index=ordered_subareas, columns=CHECKPOINTS)
             )
+            mean_scores = pivot.mean(axis=1, skipna=True)
+            pivot = pivot.loc[mean_scores.sort_values(ascending=False, kind="stable").index]
 
             x = np.arange(len(pivot.index))
             width = 0.24
@@ -307,10 +324,11 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
 
             ax.set_xticks(x)
             ax.set_xticklabels(
-                [SUBAREA_DISPLAY.get(subarea, subarea) for subarea in pivot.index],
-                rotation=40,
-                ha="right",
+                [SUBAREA_DISPLAY_COMPACT.get(subarea, SUBAREA_DISPLAY.get(subarea, subarea)) for subarea in pivot.index],
+                rotation=0,
+                ha="center",
             )
+            ax.tick_params(axis="x", labelsize=8)
             ax.set_ylim(0, 1.08)
             ax.set_ylabel("Score")
             ax.set_title(f"{task_label} Subarea Scores")
