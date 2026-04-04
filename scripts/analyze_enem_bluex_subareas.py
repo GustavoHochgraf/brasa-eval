@@ -42,6 +42,12 @@ CHECKPOINT_SHORT = {
     "Carolina adapted": "Carolina\nadapted",
 }
 
+CHECKPOINT_LEGEND = {
+    "Qwen 1.7B Base": "Qwen 1.7B Base",
+    "Gigaverbo adapted": "Gigaverbo adapted",
+    "Carolina adapted": "Carolina adapted",
+}
+
 # Short names for CSV column headers (no line breaks)
 CHECKPOINT_CSV = {
     "Qwen 1.7B Base": "qwen_1_7b_base",
@@ -242,6 +248,67 @@ def plot_heatmap(df: pd.DataFrame, out_dir: Path) -> None:
         log.info("Wrote: %s", out_path)
 
 
+def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
+    """Save the side-by-side grouped bar chart requested for paper use."""
+    plt.rcParams.update({
+        "font.size": 10,
+        "font.family": "serif",
+        "figure.dpi": 300,
+        "savefig.bbox": "tight",
+        "savefig.pad_inches": 0.15,
+    })
+
+    colors = ["#4878d0", "#ee854a", "#6acc64"]
+    tasks_ordered = ["ENEM 2022", "BLUEX"]
+
+    for ext in ["png", "pdf"]:
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5), sharey=True)
+        if len(tasks_ordered) == 1:
+            axes = [axes]
+
+        for ax, task_label in zip(axes, tasks_ordered):
+            task_key = [k for k, v in TASKS.items() if v["label"] == task_label][0]
+            ordered_subareas = TASKS[task_key]["subareas"]
+            pivot = (
+                df[df["task"] == task_label]
+                .pivot(index="subarea", columns="checkpoint", values="score")
+                .reindex(index=ordered_subareas, columns=CHECKPOINTS)
+            )
+
+            x = np.arange(len(pivot.index))
+            width = 0.24
+
+            for idx, checkpoint in enumerate(CHECKPOINTS):
+                vals = pivot[checkpoint].tolist()
+                positions = x + idx * width - width
+                ax.bar(
+                    positions,
+                    vals,
+                    width,
+                    label=CHECKPOINT_LEGEND[checkpoint],
+                    color=colors[idx],
+                    edgecolor="white",
+                    linewidth=0.5,
+                )
+
+            ax.set_xticks(x)
+            ax.set_xticklabels(
+                [SUBAREA_DISPLAY.get(subarea, subarea) for subarea in pivot.index],
+                rotation=40,
+                ha="right",
+            )
+            ax.set_ylim(0, 1.0)
+            ax.set_ylabel("Score")
+            ax.set_title(f"{task_label} Subarea Scores")
+            ax.grid(axis="y", alpha=0.25)
+            ax.legend(loc="upper right", fontsize=8)
+
+        out_path = out_dir / f"enem_bluex_subareas.{ext}"
+        fig.savefig(out_path)
+        plt.close(fig)
+        log.info("Wrote: %s", out_path)
+
+
 # ── Summary ───────────────────────────────────────────────────────────
 
 def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
@@ -391,8 +458,9 @@ def main() -> None:
     deltas_df.to_csv(scorecards_dir / "enem_bluex_subarea_deltas_vs_baseline.csv", index=False)
     log.info("Wrote: %s", scorecards_dir / "enem_bluex_subarea_deltas_vs_baseline.csv")
 
-    # 3. Heatmap -> figures/
+    # 3. Figures -> figures/
     plot_heatmap(df, figures_dir)
+    plot_grouped_bars(df, figures_dir)
 
     # 4. Summary -> scorecards/
     generate_summary(deltas_df, scorecards_dir)
