@@ -299,8 +299,10 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
                         f"{val:.2f}",
                         ha="center",
                         va="bottom",
-                        fontsize=7,
-                        rotation=90,
+                        fontsize=6.5,
+                        rotation=32,
+                        rotation_mode="anchor",
+                        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8, "pad": 0.15},
                     )
 
             ax.set_xticks(x)
@@ -309,7 +311,7 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
                 rotation=40,
                 ha="right",
             )
-            ax.set_ylim(0, 1.05)
+            ax.set_ylim(0, 1.08)
             ax.set_ylabel("Score")
             ax.set_title(f"{task_label} Subarea Scores")
             ax.grid(axis="y", alpha=0.25)
