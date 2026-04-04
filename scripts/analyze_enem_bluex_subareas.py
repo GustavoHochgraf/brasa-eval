@@ -281,7 +281,7 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
             for idx, checkpoint in enumerate(CHECKPOINTS):
                 vals = pivot[checkpoint].tolist()
                 positions = x + idx * width - width
-                ax.bar(
+                bars = ax.bar(
                     positions,
                     vals,
                     width,
@@ -290,6 +290,18 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
                     edgecolor="white",
                     linewidth=0.5,
                 )
+                for bar, val in zip(bars, vals):
+                    if np.isnan(val):
+                        continue
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2,
+                        val + 0.012,
+                        f"{val:.2f}",
+                        ha="center",
+                        va="bottom",
+                        fontsize=7,
+                        rotation=90,
+                    )
 
             ax.set_xticks(x)
             ax.set_xticklabels(
@@ -297,7 +309,7 @@ def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
                 rotation=40,
                 ha="right",
             )
-            ax.set_ylim(0, 1.0)
+            ax.set_ylim(0, 1.05)
             ax.set_ylabel("Score")
             ax.set_title(f"{task_label} Subarea Scores")
             ax.grid(axis="y", alpha=0.25)
