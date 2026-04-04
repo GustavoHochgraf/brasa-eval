@@ -20,9 +20,9 @@ RESULTS_DIR = ROOT / "outputs" / "eval_results"
 SCORECARDS_DIR = ROOT / "outputs" / "scorecards"
 
 CHECKPOINTS = [
-    "Qwen3-1.7B-Base",
-    "TuQwen3-Base-LR1e5-run1",
-    "QwenRolina3-Base",
+    "Qwen 1.7B Base",
+    "Gigaverbo adapted",
+    "Carolina adapted",
 ]
 
 
@@ -181,9 +181,9 @@ class TestReadmeNumbers:
     def test_all_scores(self, seg, eval_results):
         scores = self._compute_scores(seg, eval_results)
         expected_all = {
-            "Qwen3-1.7B-Base": 0.6655,
-            "TuQwen3-Base-LR1e5-run1": 0.6609,
-            "QwenRolina3-Base": 0.6580,
+            "Qwen 1.7B Base": 0.6655,
+            "Gigaverbo adapted": 0.6609,
+            "Carolina adapted": 0.6580,
         }
         for cp, expected in expected_all.items():
             actual = round(scores[cp]["score"].mean(), 4)
@@ -194,9 +194,9 @@ class TestReadmeNumbers:
     def test_native_scores(self, seg, eval_results):
         scores = self._compute_scores(seg, eval_results)
         expected_native = {
-            "Qwen3-1.7B-Base": 0.6862,
-            "TuQwen3-Base-LR1e5-run1": 0.6902,
-            "QwenRolina3-Base": 0.6891,
+            "Qwen 1.7B Base": 0.6862,
+            "Gigaverbo adapted": 0.6902,
+            "Carolina adapted": 0.6891,
         }
         for cp, expected in expected_native.items():
             df = scores[cp]
@@ -208,9 +208,9 @@ class TestReadmeNumbers:
     def test_translated_scores(self, seg, eval_results):
         scores = self._compute_scores(seg, eval_results)
         expected_translated = {
-            "Qwen3-1.7B-Base": 0.6544,
-            "TuQwen3-Base-LR1e5-run1": 0.6451,
-            "QwenRolina3-Base": 0.6412,
+            "Qwen 1.7B Base": 0.6544,
+            "Gigaverbo adapted": 0.6451,
+            "Carolina adapted": 0.6412,
         }
         for cp, expected in expected_translated.items():
             df = scores[cp]

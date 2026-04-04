@@ -30,23 +30,29 @@ log = logging.getLogger(__name__)
 
 # ── Configuration ─────────────────────────────────────────────────────
 CHECKPOINTS = [
-    "Qwen3-1.7B-Base",
-    "TuQwen3-Base-LR1e5-run1",
-    "QwenRolina3-Base",
+    "Qwen 1.7B Base",
+    "Gigaverbo adapted",
+    "Carolina adapted",
 ]
 BASELINE = CHECKPOINTS[0]
 
 CHECKPOINT_SHORT = {
-    "Qwen3-1.7B-Base": "Qwen Base",
-    "TuQwen3-Base-LR1e5-run1": "TuQwen\n(GigaVerbo)",
-    "QwenRolina3-Base": "QwenRolina\n(Carolina)",
+    "Qwen 1.7B Base": "Qwen 1.7B\nBase",
+    "Gigaverbo adapted": "Gigaverbo\nadapted",
+    "Carolina adapted": "Carolina\nadapted",
+}
+
+CHECKPOINT_LEGEND = {
+    "Qwen 1.7B Base": "Qwen 1.7B Base",
+    "Gigaverbo adapted": "Gigaverbo adapted",
+    "Carolina adapted": "Carolina adapted",
 }
 
 # Short names for CSV column headers (no line breaks)
 CHECKPOINT_CSV = {
-    "Qwen3-1.7B-Base": "qwen_base",
-    "TuQwen3-Base-LR1e5-run1": "tuqwen",
-    "QwenRolina3-Base": "qwenrolina",
+    "Qwen 1.7B Base": "qwen_1_7b_base",
+    "Gigaverbo adapted": "gigaverbo_adapted",
+    "Carolina adapted": "carolina_adapted",
 }
 
 TASKS = {
@@ -76,6 +82,21 @@ SUBAREA_DISPLAY = {
     "portuguese": "Portuguese",
     "english": "English",
     "philosophy": "Philosophy",
+}
+
+SUBAREA_DISPLAY_COMPACT = {
+    "human-sciences": "Human Sci.",
+    "mathematics": "Math",
+    "natural-sciences": "Natural Sci.",
+    "languages": "Languages",
+    "history": "History",
+    "geography": "Geog.",
+    "biology": "Biology",
+    "chemistry": "Chem.",
+    "physics": "Physics",
+    "portuguese": "Port.",
+    "english": "English",
+    "philosophy": "Phil.",
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────
@@ -242,6 +263,84 @@ def plot_heatmap(df: pd.DataFrame, out_dir: Path) -> None:
         log.info("Wrote: %s", out_path)
 
 
+def plot_grouped_bars(df: pd.DataFrame, out_dir: Path) -> None:
+    """Save the side-by-side grouped bar chart requested for paper use."""
+    plt.rcParams.update({
+        "font.size": 10,
+        "font.family": "serif",
+        "figure.dpi": 300,
+        "savefig.bbox": "tight",
+        "savefig.pad_inches": 0.15,
+    })
+
+    colors = ["#4878d0", "#ee854a", "#6acc64"]
+    tasks_ordered = ["ENEM 2022", "BLUEX"]
+
+    for ext in ["png", "pdf"]:
+        fig, axes = plt.subplots(1, 2, figsize=(14, 4.1), sharey=True)
+        if len(tasks_ordered) == 1:
+            axes = [axes]
+
+        for ax, task_label in zip(axes, tasks_ordered):
+            task_key = [k for k, v in TASKS.items() if v["label"] == task_label][0]
+            ordered_subareas = TASKS[task_key]["subareas"]
+            pivot = (
+                df[df["task"] == task_label]
+                .pivot(index="subarea", columns="checkpoint", values="score")
+                .reindex(index=ordered_subareas, columns=CHECKPOINTS)
+            )
+            mean_scores = pivot.mean(axis=1, skipna=True)
+            pivot = pivot.loc[mean_scores.sort_values(ascending=False, kind="stable").index]
+
+            x = np.arange(len(pivot.index))
+            width = 0.24
+
+            for idx, checkpoint in enumerate(CHECKPOINTS):
+                vals = pivot[checkpoint].tolist()
+                positions = x + idx * width - width
+                bars = ax.bar(
+                    positions,
+                    vals,
+                    width,
+                    label=CHECKPOINT_LEGEND[checkpoint],
+                    color=colors[idx],
+                    edgecolor="white",
+                    linewidth=0.5,
+                )
+                for bar, val in zip(bars, vals):
+                    if np.isnan(val):
+                        continue
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2,
+                        val + 0.012,
+                        f"{val:.2f}",
+                        ha="center",
+                        va="bottom",
+                        fontsize=6.5,
+                        rotation=32,
+                        rotation_mode="anchor",
+                        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8, "pad": 0.15},
+                    )
+
+            ax.set_xticks(x)
+            ax.set_xticklabels(
+                [SUBAREA_DISPLAY_COMPACT.get(subarea, SUBAREA_DISPLAY.get(subarea, subarea)) for subarea in pivot.index],
+                rotation=0,
+                ha="center",
+            )
+            ax.tick_params(axis="x", labelsize=8)
+            ax.set_ylim(0, 1.08)
+            ax.set_ylabel("Score")
+            ax.set_title(f"{task_label} Subarea Scores")
+            ax.grid(axis="y", alpha=0.25)
+            ax.legend(loc="upper right", fontsize=8)
+
+        out_path = out_dir / f"enem_bluex_subareas.{ext}"
+        fig.savefig(out_path)
+        plt.close(fig)
+        log.info("Wrote: %s", out_path)
+
+
 # ── Summary ───────────────────────────────────────────────────────────
 
 def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
@@ -250,11 +349,14 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
         "# ENEM / BLUEX Subarea Analysis — Summary",
         "",
         "Supplementary drill-down within the Brazil / Exams category.",
-        "Baseline: Qwen3-1.7B-Base. Deltas in percentage points (pp).",
+        "Baseline: Qwen 1.7B Base. Deltas in percentage points (pp).",
         "",
     ]
 
-    for cp_key, cp_label in [("tuqwen", "TuQwen (GigaVerbo)"), ("qwenrolina", "QwenRolina (Carolina)")]:
+    for cp_key, cp_label in [
+        ("gigaverbo_adapted", "Gigaverbo adapted"),
+        ("carolina_adapted", "Carolina adapted"),
+    ]:
         delta_col = f"{cp_key}_delta"
         if delta_col not in deltas_df.columns:
             continue
@@ -291,37 +393,37 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
     enem_math = deltas_df[(deltas_df["task"] == "ENEM 2022") & (deltas_df["subarea"] == "mathematics")]
     if not enem_math.empty:
         r = enem_math.iloc[0]
-        tuq_d = r.get("tuqwen_delta")
-        rol_d = r.get("qwenrolina_delta")
-        if tuq_d is not None and rol_d is not None:
+        giga_d = r.get("gigaverbo_adapted_delta")
+        carol_d = r.get("carolina_adapted_delta")
+        if giga_d is not None and carol_d is not None:
             findings.append(
                 f"- **ENEM 2022 Mathematics** sees the largest absolute gains from continued pretraining "
-                f"(+{tuq_d*100:.1f} pp TuQwen, +{rol_d*100:.1f} pp QwenRolina), "
+                f"(+{giga_d*100:.1f} pp Gigaverbo adapted, +{carol_d*100:.1f} pp Carolina adapted), "
                 f"though from a very low baseline ({r['baseline_score']:.2f})."
             )
 
     bluex_bio = deltas_df[(deltas_df["task"] == "BLUEX") & (deltas_df["subarea"] == "biology")]
     if not bluex_bio.empty:
         r = bluex_bio.iloc[0]
-        tuq_d = r.get("tuqwen_delta")
-        rol_d = r.get("qwenrolina_delta")
-        if tuq_d is not None and rol_d is not None:
+        giga_d = r.get("gigaverbo_adapted_delta")
+        carol_d = r.get("carolina_adapted_delta")
+        if giga_d is not None and carol_d is not None:
             findings.append(
                 f"- **BLUEX Biology** improves with both corpora "
-                f"(+{tuq_d*100:.1f} pp TuQwen, +{rol_d*100:.1f} pp QwenRolina), "
-                f"the largest BLUEX gain for QwenRolina."
+                f"(+{giga_d*100:.1f} pp Gigaverbo adapted, +{carol_d*100:.1f} pp Carolina adapted), "
+                f"the largest BLUEX gain for Carolina adapted."
             )
 
     for sub in ["physics", "chemistry"]:
         row = deltas_df[(deltas_df["task"] == "BLUEX") & (deltas_df["subarea"] == sub)]
         if not row.empty:
             r = row.iloc[0]
-            tuq_d = r.get("tuqwen_delta")
-            rol_d = r.get("qwenrolina_delta")
-            if tuq_d is not None and rol_d is not None and (tuq_d < -0.01 or rol_d < -0.01):
+            giga_d = r.get("gigaverbo_adapted_delta")
+            carol_d = r.get("carolina_adapted_delta")
+            if giga_d is not None and carol_d is not None and (giga_d < -0.01 or carol_d < -0.01):
                 findings.append(
                     f"- **BLUEX {sub.title()}** declines for at least one model "
-                    f"({tuq_d*100:+.1f} pp TuQwen, {rol_d*100:+.1f} pp QwenRolina), "
+                    f"({giga_d*100:+.1f} pp Gigaverbo adapted, {carol_d*100:+.1f} pp Carolina adapted), "
                     f"suggesting continued pretraining in Portuguese does not help STEM problem-solving."
                 )
                 break
@@ -329,11 +431,11 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
     enem_ns = deltas_df[(deltas_df["task"] == "ENEM 2022") & (deltas_df["subarea"] == "natural-sciences")]
     if not enem_ns.empty:
         r = enem_ns.iloc[0]
-        rol_d = r.get("qwenrolina_delta")
-        if rol_d is not None and rol_d > 0.05:
+        carol_d = r.get("carolina_adapted_delta")
+        if carol_d is not None and carol_d > 0.05:
             findings.append(
-                f"- **ENEM 2022 Natural Sciences** shows a strong QwenRolina gain "
-                f"(+{rol_d*100:.1f} pp), consistent with the Carolina corpus "
+                f"- **ENEM 2022 Natural Sciences** shows a strong Carolina adapted gain "
+                f"(+{carol_d*100:.1f} pp), consistent with the Carolina corpus "
                 f"containing Brazilian educational content."
             )
 
@@ -388,8 +490,9 @@ def main() -> None:
     deltas_df.to_csv(scorecards_dir / "enem_bluex_subarea_deltas_vs_baseline.csv", index=False)
     log.info("Wrote: %s", scorecards_dir / "enem_bluex_subarea_deltas_vs_baseline.csv")
 
-    # 3. Heatmap -> figures/
+    # 3. Figures -> figures/
     plot_heatmap(df, figures_dir)
+    plot_grouped_bars(df, figures_dir)
 
     # 4. Summary -> scorecards/
     generate_summary(deltas_df, scorecards_dir)

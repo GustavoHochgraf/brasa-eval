@@ -1,4 +1,4 @@
-task,subarea,baseline_score,tuqwen_score,tuqwen_delta,qwenrolina_score,qwenrolina_delta
+task,subarea,baseline_score,gigaverbo_adapted_score,gigaverbo_adapted_delta,carolina_adapted_score,carolina_adapted_delta
 ENEM 2022,human-sciences,0.7027,0.7297,0.027,0.7297,0.027
 ENEM 2022,mathematics,0.1364,0.1818,0.0455,0.2273,0.0909
 ENEM 2022,natural-sciences,0.5769,0.6154,0.0385,0.6923,0.1154

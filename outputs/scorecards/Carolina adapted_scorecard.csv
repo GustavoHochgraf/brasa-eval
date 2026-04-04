@@ -1,0 +1,41 @@
+checkpoint,task,lm_eval_task,categoria_paper,native_translated,metric,score
+Carolina adapted,Assin RTE,assin_rte_greedy,Text understanding / QA / classification,Native,acc,0.9133333333333333
+Carolina adapted,Assin STS,assin_sts_greedy,Text understanding / QA / classification,Native,pearson,0.5319073764742336
+Carolina adapted,BLUEX,bluex_greedy,Brazil / exams / culture,Native,acc_norm,0.5512978986402967
+Carolina adapted,Enem,enem_greedy,Brazil / exams / culture,Native,acc,0.7281659388646288
+Carolina adapted,Enem 2022,enem2022_greedy,Brazil / exams / culture,Native,acc,0.6271186440677966
+Carolina adapted,Faquad,faquad_nli_greedy,Text understanding / QA / classification,Native,f1,0.7885773654705679
+Carolina adapted,TweetsentBR,tweetsentbr_greedy,Social / safety,Native,acc,0.5375
+Carolina adapted,Broverbs History to Proverb,broverbs_history_to_proverb_greedy,Brazil / exams / culture,Native,acc,0.5533333333333333
+Carolina adapted,Broverbs Proverb to History,broverbs_proverb_to_history_greedy,Brazil / exams / culture,Native,acc,0.4666666666666667
+Carolina adapted,InferBR,inferbr_greedy,Reasoning,Native,acc,0.8033333333333333
+Carolina adapted,Repro,repro_greedy,Brazil / exams / culture,Native,acc,0.95
+Carolina adapted,Mina BR,mina_br_greedy,Social / safety,Native,acc,0.7333333333333333
+Carolina adapted,PT Hate Speech,pt_hate_speech_greedy,Social / safety,Native,acc,0.6966666666666667
+Carolina adapted,HateBR Binary,hatebr_binary_greedy,Social / safety,Native,acc,0.7666666666666667
+Carolina adapted,AGNews,agnews_pt_greedy,Text understanding / QA / classification,Translated,acc,0.81
+Carolina adapted,BoolQ,boolq_pt_greedy,Text understanding / QA / classification,Translated,acc,0.6666666666666666
+Carolina adapted,IMDb,imdb_pt_greedy,Text understanding / QA / classification,Translated,acc,0.83
+Carolina adapted,Massive,massive_pt_greedy,Text understanding / QA / classification,Translated,acc,0.7066666666666667
+Carolina adapted,MKQA,mkqa_pt_greedy,Text understanding / QA / classification,Translated,best_em,0.0967
+Carolina adapted,SST-2,sst2_pt_greedy,Text understanding / QA / classification,Translated,acc,0.8866666666666667
+Carolina adapted,WSC-285,wsc285_pt_greedy,Reasoning,Translated,acc,0.6210526315789474
+Carolina adapted,BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,Reasoning,Translated,acc,0.25666666666666665
+Carolina adapted,BB Code Line Description,bigbench_pt_code_line_description_greedy,Code / other,Translated,acc,0.9666666666666667
+Carolina adapted,BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,Reasoning,Translated,acc,0.6262626262626263
+Carolina adapted,BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,Reasoning,Translated,acc,0.53
+Carolina adapted,BB General Knowledge,bigbench_pt_general_knowledge_greedy,Text understanding / QA / classification,Translated,acc,0.8142857142857143
+Carolina adapted,BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,Math,Translated,acc,0.6
+Carolina adapted,BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,Social / safety,Translated,acc,0.8782608695652174
+Carolina adapted,BB StrategyQA,bigbench_pt_strategyqa_greedy,Reasoning,Translated,acc,0.64
+Carolina adapted,BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,Text understanding / QA / classification,Translated,acc,0.5966666666666667
+Carolina adapted,BB Social IQA,bigbench_pt_social_iqa_greedy,Reasoning,Translated,acc,0.59
+Carolina adapted,BB Causal Judgment,bigbench_pt_causal_judgment_greedy,Reasoning,Translated,acc,0.5473684210526316
+Carolina adapted,BB BBQ,bigbench_pt_bbq_greedy,Social / safety,Translated,acc,0.71
+Carolina adapted,BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,Reasoning,Translated,acc,0.7450980392156863
+Carolina adapted,StoryCloze,storycloze_pt_greedy,Reasoning,Translated,acc,0.8466666666666667
+Carolina adapted,Math MC,math_mc_greedy,Math,Translated,acc,0.5533333333333333
+Carolina adapted,GSM8K MC,gsm8k_mc_greedy,Math,Translated,acc,0.4033333333333333
+Carolina adapted,AGIEval SAT Math,agieval_sat_math_greedy,Math,Translated,acc,0.4818181818181818
+Carolina adapted,Balanced COPA,balanced_copa_greedy,Reasoning,Translated,acc,0.84
+Carolina adapted,LogiQA,logiqa_greedy,Reasoning,Translated,acc,0.4276094276094276

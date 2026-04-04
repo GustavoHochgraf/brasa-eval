@@ -180,7 +180,7 @@
     }
   },
   "config": {
-    "model": "ggg-llms-team/TuQwen3-Base-LR1e5-run1",
-    "source": "TuQwen-eval-PoETaV2"
+    "model": "Gigaverbo adapted",
+    "source": "private PoETa v2 evaluation repo"
   }
 }

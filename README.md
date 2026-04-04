@@ -20,13 +20,13 @@ Benchmarks agregados (e.g., um unico score no leaderboard) mascaram diferencas i
 
 Tres checkpoints do Qwen 1.7B com diferentes estrategias de continued pretraining:
 
-| Modelo | HuggingFace ID | Treinamento | Corpus |
-|--------|---------------|-------------|--------|
-| **Qwen 1.7B Base** | [`Qwen/Qwen3-1.7B-Base`](https://huggingface.co/Qwen/Qwen3-1.7B-Base) | Nenhum (baseline) | — |
-| **TuQwen (GigaVerbo)** | [`ggg-llms-team/TuQwen3-Base-LR1e5-run1`](https://huggingface.co/ggg-llms-team/TuQwen3-Base-LR1e5-run1) | Continued pretraining, 1 epoch | GigaVerbo (100B tokens) |
-| **QwenRolina (Carolina)** | [`g4me/QwenRolina3-Base-LR1e5-b32g2gc8-order-domain`](https://huggingface.co/g4me/QwenRolina3-Base-LR1e5-b32g2gc8-order-domain) | Continued pretraining, 1 epoch | Carolina (200M tokens) |
+| Modelo | Treinamento | Corpus |
+|--------|-------------|--------|
+| **Qwen 1.7B Base** | Nenhum (baseline) | — |
+| **Gigaverbo adapted** | Continued pretraining, 1 epoch | GigaVerbo (100B tokens) |
+| **Carolina adapted** | Continued pretraining, 1 epoch | Carolina (200M tokens) |
 
-Os resultados de avaliacao foram obtidos do repositorio privado [`C4AI/TuQwen-eval-PoETaV2`](https://github.com/C4AI/TuQwen-eval-PoETaV2) e convertidos via `scripts/import_poetav2_results.py`.
+Os resultados de avaliacao foram obtidos de um repositorio privado de avaliacao do PoETa v2 e convertidos via `scripts/import_poetav2_results.py`.
 
 ---
 
@@ -37,19 +37,19 @@ Os resultados de avaliacao foram obtidos do repositorio privado [`C4AI/TuQwen-ev
 | Checkpoint | All | Native (14) | Translated (26) |
 |:-----------|:---:|:-----------:|:---------------:|
 | **Qwen 1.7B Base** | **0.6655** | 0.6862 | **0.6544** |
-| **TuQwen (GigaVerbo)** | 0.6609 | **0.6902** | 0.6451 |
-| **QwenRolina (Carolina)** | 0.6580 | 0.6891 | 0.6412 |
+| **Gigaverbo adapted** | 0.6609 | **0.6902** | 0.6451 |
+| **Carolina adapted** | 0.6580 | 0.6891 | 0.6412 |
 
 **Observacoes:**
 - O All score varia apenas 0.75 pp entre checkpoints — insuficiente para distinguir os modelos.
-- O Native score sobe consistentemente apos continued pretraining (+0.29 pp para QwenRolina, +0.40 pp para TuQwen), indicando que ambos os corpora beneficiam tarefas em portugues nativo.
-- O Translated score cai em ambos os modelos treinados (-0.93 pp para TuQwen, -1.32 pp para QwenRolina), sugerindo trade-off entre capacidade em portugues e desempenho em tarefas traduzidas do ingles.
+- O Native score sobe consistentemente apos continued pretraining (+0.29 pp para Carolina adapted, +0.40 pp para Gigaverbo adapted), indicando que ambos os corpora beneficiam tarefas em portugues nativo.
+- O Translated score cai em ambos os modelos treinados (-0.93 pp para Gigaverbo adapted, -1.32 pp para Carolina adapted), sugerindo trade-off entre capacidade em portugues e desempenho em tarefas traduzidas do ingles.
 
 ### Breakdown por categoria
 
 As 40 tarefas sao agrupadas manualmente em 6 categorias diagnosticas orientadas a interpretabilidade (manual capability grouping). O PoETa v2 original possui subcategorias multi-rotulo; este paper colapsa essas subcategorias em buckets mais amplos, atribuindo cada task ao bucket que melhor representa seu sinal diagnostico dominante.
 
-| Categoria | # Tasks | Qwen Base | TuQwen (GigaVerbo) | QwenRolina (Carolina) |
+| Categoria | # Tasks | Qwen 1.7B Base | Gigaverbo adapted | Carolina adapted |
 |:----------|:-------:|:---------:|:------------------:|:---------------------:|
 | Brazil / exams / culture | 6 | 0.6228 | 0.6300 | **0.6461** |
 | Text understanding / QA / classification | 11 | **0.7192** | 0.7016 | 0.6947 |
@@ -59,17 +59,17 @@ As 40 tarefas sao agrupadas manualmente em 6 categorias diagnosticas orientadas 
 | Code / other | 1 | 0.9667 | 0.9667 | 0.9667 |
 
 **Observacoes:**
-- **Brazil / exams / culture**: QwenRolina (+2.33 pp vs base) supera TuQwen (+0.72 pp). O Carolina, apesar de menor, contem conteudo cultural brasileiro que beneficia ENEM, BLUEX e BRoverbs.
-- **Text understanding / QA / classification**: O base Qwen e o melhor. O continued pretraining reduz desempenho em tarefas de compreensao textual traduzidas (queda de -1.76 pp para TuQwen, -2.45 pp para QwenRolina).
+- **Brazil / exams / culture**: Carolina adapted (+2.33 pp vs base) supera Gigaverbo adapted (+0.72 pp). O Carolina, apesar de menor, contem conteudo cultural brasileiro que beneficia ENEM, BLUEX e BRoverbs.
+- **Text understanding / QA / classification**: O base Qwen e o melhor. O continued pretraining reduz desempenho em tarefas de compreensao textual traduzidas (queda de -1.76 pp para Gigaverbo adapted, -2.45 pp para Carolina adapted).
 - **Social / safety**: Mesma tendencia — o base lidera. Apesar de a maioria das tarefas ser nativa (4 Native + 2 Translated), o continued pretraining nao melhora deteccao de toxicidade.
-- **Reasoning e Math**: TuQwen apresenta leve vantagem, consistente com o GigaVerbo sendo um corpus maior e mais diverso.
+- **Reasoning e Math**: Gigaverbo adapted apresenta leve vantagem, consistente com o GigaVerbo sendo um corpus maior e mais diverso.
 - **Code / other**: Efeito teto — todos atingem 96.7% na unica tarefa (BB Code Line Description).
 
-### Top mudancas por tarefa (vs. Qwen Base)
+### Top mudancas por tarefa (vs. Qwen 1.7B Base)
 
-#### Qwen Base -> TuQwen (efeito do GigaVerbo, 100B tokens)
+#### Qwen 1.7B Base -> Gigaverbo adapted (efeito do GigaVerbo, 100B tokens)
 
-| Tarefa | Base | TuQwen | Delta |
+| Tarefa | Base | Gigaverbo adapted | Delta |
 |:-------|:----:|:------:|:-----:|
 | BB Empirical Judgments | 0.545 | 0.606 | +0.061 |
 | BB Mathematical Induction | 0.657 | 0.714 | +0.057 |
@@ -84,9 +84,9 @@ As 40 tarefas sao agrupadas manualmente em 6 categorias diagnosticas orientadas 
 
 **Padrao:** O GigaVerbo melhora raciocinio (BB Mathematical Induction +5.7 pp, Balanced COPA +3.3 pp) e tarefas culturais (BRoverbs +3.7 pp). As perdas concentram-se em tarefas traduzidas de compreensao (BoolQ -14.7 pp, IMDb -3.3 pp).
 
-#### Qwen Base -> QwenRolina (efeito do Carolina, 200M tokens)
+#### Qwen 1.7B Base -> Carolina adapted (efeito do Carolina, 200M tokens)
 
-| Tarefa | Base | QwenRolina | Delta |
+| Tarefa | Base | Carolina adapted | Delta |
 |:-------|:----:|:----------:|:-----:|
 | BB Empirical Judgments | 0.545 | 0.626 | +0.081 |
 | Enem 2022 | 0.585 | 0.627 | +0.042 |
@@ -107,7 +107,7 @@ O GigaVerbo (100B tokens) e o Carolina (200M tokens) produzem perfis de ganho di
 - **Tarefas culturais brasileiras**: Carolina e superior (Enem 2022 +4.2 pp vs +0.85 pp do GigaVerbo; BRoverbs Proverb->History +3.7 pp vs +0.33 pp).
 - **Raciocinio**: GigaVerbo e superior (BB Mathematical Induction +5.7 pp vs -5.7 pp do Carolina).
 - **Custo em tarefas traduzidas**: Carolina perde mais (IMDb -7.3 pp vs -3.3 pp; StoryCloze -5.7 pp vs -2.7 pp).
-- Ambos compartilham a queda em BB BBQ (-3.0 pp TuQwen, -4.7 pp QwenRolina). A queda em BoolQ e exclusiva do TuQwen (-14.7 pp); QwenRolina mantem o mesmo score do base (0.0 pp).
+- Ambos compartilham a queda em BB BBQ (-3.0 pp Gigaverbo adapted, -4.7 pp Carolina adapted). A queda em BoolQ e exclusiva do Gigaverbo adapted (-14.7 pp); Carolina adapted mantem o mesmo score do base (0.0 pp).
 
 ### Drill-down: ENEM 2022 e BLUEX por subarea
 
@@ -115,7 +115,7 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 
 #### ENEM 2022
 
-| Subarea | Qwen Base | TuQwen | QwenRolina | Delta TuQwen | Delta QwenRolina |
+| Subarea | Qwen 1.7B Base | Gigaverbo adapted | Carolina adapted | Delta Gigaverbo adapted | Delta Carolina adapted |
 |:--------|:---------:|:------:|:----------:|:------------:|:----------------:|
 | Human Sciences | 0.7027 | 0.7297 | 0.7297 | +2.7 pp | +2.7 pp |
 | Natural Sciences | 0.5769 | 0.6154 | 0.6923 | +3.9 pp | **+11.5 pp** |
@@ -124,7 +124,7 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 
 #### BLUEX
 
-| Subarea | Qwen Base | TuQwen | QwenRolina | Delta TuQwen | Delta QwenRolina |
+| Subarea | Qwen 1.7B Base | Gigaverbo adapted | Carolina adapted | Delta Gigaverbo adapted | Delta Carolina adapted |
 |:--------|:---------:|:------:|:----------:|:------------:|:----------------:|
 | Biology | 0.6867 | 0.7349 | 0.7831 | +4.8 pp | **+9.6 pp** |
 | History | 0.6792 | 0.7107 | 0.7107 | +3.1 pp | +3.1 pp |
@@ -137,18 +137,18 @@ Para entender onde exatamente os ganhos e perdas ocorrem dentro da categoria Bra
 | Physics | 0.2911 | 0.2785 | 0.2405 | -1.3 pp | -5.1 pp |
 
 **Observacoes:**
-- **Ciencias naturais e biologia** sao as subareas com maiores ganhos apos continued pretraining, especialmente para QwenRolina (ENEM 2022 Natural Sciences +11.5 pp, BLUEX Biology +9.6 pp).
-- **Matematica (ENEM 2022)** melhora em ambos os modelos (+4.5 pp TuQwen, +9.1 pp QwenRolina), porem partindo de um baseline muito baixo (0.14).
-- **Linguas (ENEM 2022 Languages, BLUEX English)** caem com TuQwen (-6.1 pp e -4.3 pp), indicando que o treinamento em portugues reduz capacidade em ingles.
+- **Ciencias naturais e biologia** sao as subareas com maiores ganhos apos continued pretraining, especialmente para Carolina adapted (ENEM 2022 Natural Sciences +11.5 pp, BLUEX Biology +9.6 pp).
+- **Matematica (ENEM 2022)** melhora em ambos os modelos (+4.5 pp Gigaverbo adapted, +9.1 pp Carolina adapted), porem partindo de um baseline muito baixo (0.14).
+- **Linguas (ENEM 2022 Languages, BLUEX English)** caem com Gigaverbo adapted (-6.1 pp e -4.3 pp), indicando que o treinamento em portugues reduz capacidade em ingles.
 - **Ciencias exatas (Fisica, Quimica)** apresentam efeitos mistos ou negativos, sugerindo que pretraining linguistico nao beneficia raciocinio formal/simbolico.
 
 ### Analise por tags originais PoETa
 
 Alem do agrupamento manual em 6 categorias diagnosticas, o PoETa v2 possui uma taxonomia nativa de subcategorias **multi-label** (e.g., uma task pode ser simultaneamente "reasoning" e "math"). A analise abaixo preserva essa estrutura multi-label: cada task contribui para a media de **cada tag a que pertence**.
 
-O benchmark utiliza 12 tags originais. A tabela inclui o split Native/Translated por tag e os deltas vs. baseline (Qwen Base):
+O benchmark utiliza 12 tags originais. A tabela inclui o split Native/Translated por tag e os deltas vs. baseline (Qwen 1.7B Base):
 
-| Tag original | # Tasks | Nat. | Trad. | Qwen Base | TuQwen | Delta TuQwen | QwenRolina | Delta QwenRolina |
+| Tag original | # Tasks | Nat. | Trad. | Qwen 1.7B Base | Gigaverbo adapted | Delta Gigaverbo adapted | Carolina adapted | Delta Carolina adapted |
 |:-------------|:-------:|:----:|:-----:|:---------:|:------:|:------------:|:----------:|:----------------:|
 | code | 1 | 0 | 1 | **0.9667** | **0.9667** | 0.0 pp | **0.9667** | 0.0 pp |
 | ethics | 2 | 0 | 2 | **0.8218** | 0.7938 | -2.8 pp | 0.7941 | -2.8 pp |
@@ -165,9 +165,9 @@ O benchmark utiliza 12 tags originais. A tabela inclui o split Native/Translated
 
 **Observacoes:**
 - **Tags puramente nativas** (`brazil`, `hate-speech`, `social-media`, `proverbs`) sao as unicas onde o continued pretraining nao causa quedas expressivas — confirmando que o beneficio do treinamento em portugues se concentra em conteudo nativo.
-- **`proverbs`** (+3.7 pp QwenRolina) e **`brazil`** (+1.2 pp QwenRolina) sao as tags com maiores ganhos do Carolina, consistente com o corpus conter conteudo cultural brasileiro.
-- **`reasoning`** e a tag com maior ganho do TuQwen (+1.6 pp), confirmando que o GigaVerbo (100B tokens, mais diverso) beneficia raciocinio.
-- **`general-knowledge`** sofre a maior queda absoluta (-5.7 pp TuQwen), indicando possivel catastrophic forgetting em conhecimento factual apos continued pretraining.
+- **`proverbs`** (+3.7 pp Carolina adapted) e **`brazil`** (+1.2 pp Carolina adapted) sao as tags com maiores ganhos do Carolina, consistente com o corpus conter conteudo cultural brasileiro.
+- **`reasoning`** e a tag com maior ganho do Gigaverbo adapted (+1.6 pp), confirmando que o GigaVerbo (100B tokens, mais diverso) beneficia raciocinio.
+- **`general-knowledge`** sofre a maior queda absoluta (-5.7 pp Gigaverbo adapted), indicando possivel catastrophic forgetting em conhecimento factual apos continued pretraining.
 - **Tags traduzidas de alta performance** (`ethics`, `common-sense`) caem sistematicamente em ambos os modelos, reforçando o trade-off Native vs. Translated.
 - **`code`** apresenta efeito teto (96.7%) — unica task, sem variacao entre checkpoints.
 
@@ -264,14 +264,14 @@ pip install pandas matplotlib numpy
 
 ### Importar resultados do repo PoETaV2
 
-Se voce tem acesso ao repo privado `C4AI/TuQwen-eval-PoETaV2`:
+Se voce tem acesso ao repo privado de avaliacao do PoETa v2:
 
 ```bash
 # Clonar o repo de resultados
-git clone https://github.com/C4AI/TuQwen-eval-PoETaV2.git ../TuQwen-eval-PoETaV2
+git clone <repo-privado> ../poeta_v2_eval_private
 
 # Importar e converter resultados para formato brasa-eval
-python scripts/import_poetav2_results.py --repo-dir ../TuQwen-eval-PoETaV2
+python scripts/import_poetav2_results.py --repo-dir ../poeta_v2_eval_private
 ```
 
 ### Gerar scorecards e figuras
@@ -297,7 +297,7 @@ python scripts/analyze_original_tags.py
 ```
 brasa-eval/
 ├── scripts/
-│   ├── import_poetav2_results.py     # Importa resultados do repo TuQwen-eval-PoETaV2
+│   ├── import_poetav2_results.py     # Importa resultados do repo privado de avaliacao PoETa v2
 │   ├── build_paper_segmentation.py   # Constroi tabela de metadados das 40 tarefas
 │   ├── generate_scorecards.py        # Gera All/Native/Translated + categorias
 │   ├── plot_paper_figures.py         # Gera figuras principais (PNG/PDF)
@@ -322,7 +322,7 @@ brasa-eval/
 
 ## Conclusoes
 
-1. **Continued pretraining em portugues melhora tarefas nativas mas com custo em tarefas traduzidas.** Ambos TuQwen e QwenRolina melhoram Native score (+0.29 a +0.40 pp) enquanto Translated score cai (-0.93 a -1.32 pp). Esse trade-off e invisivel no All score agregado.
+1. **Continued pretraining em portugues melhora tarefas nativas mas com custo em tarefas traduzidas.** Ambos Gigaverbo adapted e Carolina adapted melhoram Native score (+0.29 a +0.40 pp) enquanto Translated score cai (-0.93 a -1.32 pp). Esse trade-off e invisivel no All score agregado.
 
 2. **O tamanho e diversidade do corpus importam.** O GigaVerbo (100B tokens) produz ganhos mais equilibrados entre categorias. O Carolina (200M tokens), apesar de menor, e mais efetivo em tarefas culturais brasileiras (+2.33 pp em Brazil/exams) por conter conteudo especificamente brasileiro.
 
