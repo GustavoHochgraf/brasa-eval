@@ -1,0 +1,41 @@
+checkpoint,task,lm_eval_task,categoria_paper,native_translated,metric,score
+Qwen 1.7B Base,Assin RTE,assin_rte_greedy,Text understanding / QA / classification,Native,acc,0.8866666666666667
+Qwen 1.7B Base,Assin STS,assin_sts_greedy,Text understanding / QA / classification,Native,pearson,0.5660080335238646
+Qwen 1.7B Base,BLUEX,bluex_greedy,Brazil / exams / culture,Native,acc_norm,0.5302843016069221
+Qwen 1.7B Base,Enem,enem_greedy,Brazil / exams / culture,Native,acc,0.7281659388646288
+Qwen 1.7B Base,Enem 2022,enem2022_greedy,Brazil / exams / culture,Native,acc,0.5847457627118644
+Qwen 1.7B Base,Faquad,faquad_nli_greedy,Text understanding / QA / classification,Native,f1,0.8381214482817544
+Qwen 1.7B Base,TweetsentBR,tweetsentbr_greedy,Social / safety,Native,acc,0.55
+Qwen 1.7B Base,Broverbs History to Proverb,broverbs_history_to_proverb_greedy,Brazil / exams / culture,Native,acc,0.5166666666666667
+Qwen 1.7B Base,Broverbs Proverb to History,broverbs_proverb_to_history_greedy,Brazil / exams / culture,Native,acc,0.43
+Qwen 1.7B Base,InferBR,inferbr_greedy,Reasoning,Native,acc,0.8266666666666667
+Qwen 1.7B Base,Repro,repro_greedy,Brazil / exams / culture,Native,acc,0.9466666666666667
+Qwen 1.7B Base,Mina BR,mina_br_greedy,Social / safety,Native,acc,0.71
+Qwen 1.7B Base,PT Hate Speech,pt_hate_speech_greedy,Social / safety,Native,acc,0.7066666666666667
+Qwen 1.7B Base,HateBR Binary,hatebr_binary_greedy,Social / safety,Native,acc,0.7866666666666666
+Qwen 1.7B Base,AGNews,agnews_pt_greedy,Text understanding / QA / classification,Translated,acc,0.8466666666666667
+Qwen 1.7B Base,BoolQ,boolq_pt_greedy,Text understanding / QA / classification,Translated,acc,0.6666666666666666
+Qwen 1.7B Base,IMDb,imdb_pt_greedy,Text understanding / QA / classification,Translated,acc,0.9033333333333333
+Qwen 1.7B Base,Massive,massive_pt_greedy,Text understanding / QA / classification,Translated,acc,0.6866666666666668
+Qwen 1.7B Base,MKQA,mkqa_pt_greedy,Text understanding / QA / classification,Translated,best_em,0.12
+Qwen 1.7B Base,SST-2,sst2_pt_greedy,Text understanding / QA / classification,Translated,acc,0.9033333333333333
+Qwen 1.7B Base,WSC-285,wsc285_pt_greedy,Reasoning,Translated,acc,0.631578947368421
+Qwen 1.7B Base,BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,Reasoning,Translated,acc,0.25333333333333335
+Qwen 1.7B Base,BB Code Line Description,bigbench_pt_code_line_description_greedy,Code / other,Translated,acc,0.9666666666666667
+Qwen 1.7B Base,BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,Reasoning,Translated,acc,0.5454545454545454
+Qwen 1.7B Base,BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,Reasoning,Translated,acc,0.5366666666666666
+Qwen 1.7B Base,BB General Knowledge,bigbench_pt_general_knowledge_greedy,Text understanding / QA / classification,Translated,acc,0.8571428571428571
+Qwen 1.7B Base,BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,Math,Translated,acc,0.6571428571428571
+Qwen 1.7B Base,BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,Social / safety,Translated,acc,0.8869565217391304
+Qwen 1.7B Base,BB StrategyQA,bigbench_pt_strategyqa_greedy,Reasoning,Translated,acc,0.62
+Qwen 1.7B Base,BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,Text understanding / QA / classification,Translated,acc,0.6366666666666667
+Qwen 1.7B Base,BB Social IQA,bigbench_pt_social_iqa_greedy,Reasoning,Translated,acc,0.5833333333333334
+Qwen 1.7B Base,BB Causal Judgment,bigbench_pt_causal_judgment_greedy,Reasoning,Translated,acc,0.5789473684210527
+Qwen 1.7B Base,BB BBQ,bigbench_pt_bbq_greedy,Social / safety,Translated,acc,0.7566666666666667
+Qwen 1.7B Base,BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,Reasoning,Translated,acc,0.7843137254901961
+Qwen 1.7B Base,StoryCloze,storycloze_pt_greedy,Reasoning,Translated,acc,0.9033333333333333
+Qwen 1.7B Base,Math MC,math_mc_greedy,Math,Translated,acc,0.52
+Qwen 1.7B Base,GSM8K MC,gsm8k_mc_greedy,Math,Translated,acc,0.4
+Qwen 1.7B Base,AGIEval SAT Math,agieval_sat_math_greedy,Math,Translated,acc,0.5181818181818182
+Qwen 1.7B Base,Balanced COPA,balanced_copa_greedy,Reasoning,Translated,acc,0.8166666666666667
+Qwen 1.7B Base,LogiQA,logiqa_greedy,Reasoning,Translated,acc,0.43434343434343436

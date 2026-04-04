@@ -1,4 +1,4 @@
-original_tag,Qwen3-1.7B-Base,TuQwen3-Base-LR1e5-run1,QwenRolina3-Base
+original_tag,Qwen 1.7B Base,Gigaverbo adapted,Carolina adapted
 code,0.9667,0.9667,0.9667
 ethics,0.8218,0.7938,0.7941
 common-sense,0.7666,0.759,0.7476

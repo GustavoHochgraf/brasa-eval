@@ -1,4 +1,4 @@
 checkpoint,n_tasks,all_score,native_score,translated_score,Brazil / exams / culture,Code / other,Math,Reasoning,Social / safety,Text understanding / QA / classification
-Qwen3-1.7B-Base,40,0.6655,0.6862,0.6544,0.6228,0.9667,0.5238,0.6262,0.7328,0.7192
-QwenRolina3-Base,40,0.658,0.6891,0.6412,0.6461,0.9667,0.5096,0.6228,0.7204,0.6947
-TuQwen3-Base-LR1e5-run1,40,0.6609,0.6902,0.6451,0.63,0.9667,0.5299,0.6286,0.7181,0.7016
+Qwen 1.7B Base,40,0.6655,0.6862,0.6544,0.6228,0.9667,0.5238,0.6262,0.7328,0.7192
+Gigaverbo adapted,40,0.6609,0.6902,0.6451,0.63,0.9667,0.5299,0.6286,0.7181,0.7016
+Carolina adapted,40,0.658,0.6891,0.6412,0.6461,0.9667,0.5096,0.6228,0.7204,0.6947

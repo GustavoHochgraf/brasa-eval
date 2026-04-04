@@ -55,6 +55,19 @@ CATEGORY_SHORT = {
 
 COLORS_CHECKPOINTS = ["#4878d0", "#ee854a", "#6acc64", "#d65f5f", "#956cb4"]
 COLORS_BARS = {"all_score": "#4878d0", "native_score": "#ee854a", "translated_score": "#6acc64"}
+CHECKPOINT_TICK_LABELS = {
+    "Qwen 1.7B Base": "Qwen 1.7B\nBase",
+    "Gigaverbo adapted": "Gigaverbo\nadapted",
+    "Carolina adapted": "Carolina\nadapted",
+}
+
+
+def _tick_label(checkpoint: str) -> str:
+    return CHECKPOINT_TICK_LABELS.get(checkpoint, checkpoint)
+
+
+def _slugify(value: str) -> str:
+    return value.replace(" ", "_").replace("/", "_")
 
 
 def plot_all_native_translated(comp: pd.DataFrame, out_dir: Path) -> None:
@@ -90,7 +103,7 @@ def plot_all_native_translated(comp: pd.DataFrame, out_dir: Path) -> None:
                 )
 
     ax.set_xticks([xi + width for xi in x])
-    ax.set_xticklabels(comp["checkpoint"], rotation=15, ha="right")
+    ax.set_xticklabels([_tick_label(cp) for cp in comp["checkpoint"]], rotation=15, ha="right")
     ax.set_ylabel("Score (accuracy)")
     ax.set_title("PoETa v2: All vs Native vs Translated")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.28), ncol=3)
@@ -112,7 +125,7 @@ def plot_all_native_translated(comp: pd.DataFrame, out_dir: Path) -> None:
         vals = comp[col].tolist()
         ax2.bar([xi + i * width for xi in x], vals, width, label=label, color=COLORS_BARS[col], edgecolor="white", linewidth=0.5)
     ax2.set_xticks([xi + width for xi in x])
-    ax2.set_xticklabels(comp["checkpoint"], rotation=15, ha="right")
+    ax2.set_xticklabels([_tick_label(cp) for cp in comp["checkpoint"]], rotation=15, ha="right")
     ax2.set_ylabel("Score (accuracy)")
     ax2.set_title("PoETa v2: All vs Native vs Translated")
     ax2.legend(loc="upper center", bbox_to_anchor=(0.5, -0.28), ncol=3)
@@ -139,7 +152,7 @@ def plot_category_breakdown(comp: pd.DataFrame, out_dir: Path) -> None:
         vals = [row.get(c, 0) for c in cats]
         positions = [xi + j * width - (n_checkpoints - 1) * width / 2 for xi in x]
         color = COLORS_CHECKPOINTS[j % len(COLORS_CHECKPOINTS)]
-        bars = ax.bar(positions, vals, width, label=row["checkpoint"], color=color, edgecolor="white", linewidth=0.5)
+        bars = ax.bar(positions, vals, width, label=_tick_label(row["checkpoint"]), color=color, edgecolor="white", linewidth=0.5)
         for bar, val in zip(bars, vals):
             if val and not pd.isna(val):
                 ax.text(
@@ -172,7 +185,7 @@ def plot_category_breakdown(comp: pd.DataFrame, out_dir: Path) -> None:
     for j, (_, row) in enumerate(comp.iterrows()):
         vals = [row.get(c, 0) for c in cats]
         positions = [xi + j * width - (n_checkpoints - 1) * width / 2 for xi in x]
-        ax2.bar(positions, vals, width, label=row["checkpoint"], color=COLORS_CHECKPOINTS[j % len(COLORS_CHECKPOINTS)], edgecolor="white", linewidth=0.5)
+        ax2.bar(positions, vals, width, label=_tick_label(row["checkpoint"]), color=COLORS_CHECKPOINTS[j % len(COLORS_CHECKPOINTS)], edgecolor="white", linewidth=0.5)
     ax2.set_xticks(list(x))
     ax2.set_xticklabels([CATEGORY_SHORT.get(c, c) for c in cats], rotation=20, ha="right")
     ax2.set_ylabel("Score (accuracy)")
@@ -212,7 +225,7 @@ def plot_task_deltas(scorecards_dir: Path, out_dir: Path) -> None:
         ax.axvline(0, color="black", linewidth=0.5)
         ax.grid(axis="x", alpha=0.3)
 
-        fname = f"task_deltas_{cp_from}_to_{cp_to}.png".replace(" ", "_")
+        fname = f"task_deltas_{_slugify(cp_from)}_to_{_slugify(cp_to)}.png"
         fig.savefig(out_dir / fname)
         plt.close(fig)
         log.info("Wrote: %s", out_dir / fname)

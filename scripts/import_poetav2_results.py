@@ -1,19 +1,24 @@
 #!/usr/bin/env python
-"""Import PoETa v2 evaluation results from the TuQwen-eval-PoETaV2 repo.
+"""Import PoETa v2 evaluation results from a private source repository.
 
-Reads individual task JSON files from the cloned repo and converts them
-to the combined format expected by generate_scorecards.py.
+Reads task-level JSON files from a cloned evaluation repository and converts
+them to the combined format expected by `generate_scorecards.py`.
 
-Handles task name mapping between PoETaV2 naming and brasa-eval naming.
+The importer auto-detects the three paper checkpoints:
+  - Qwen 1.7B Base
+  - Gigaverbo adapted
+  - Carolina adapted
 
 Usage:
-    python scripts/import_poetav2_results.py --repo-dir ../TuQwen-eval-PoETaV2
+    python scripts/import_poetav2_results.py
+    python scripts/import_poetav2_results.py --repo-dir ../poeta_v2_eval_private
 """
 from __future__ import annotations
 
 import argparse
 import json
 import logging
+import re
 import subprocess
 from pathlib import Path
 
@@ -21,9 +26,10 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_REPO_DIR = REPO_ROOT.parent / "poeta_v2_eval_private"
+MODEL_ID_RE = re.compile(r"pretrained=([^,\s]+)")
 
-# Task name mapping: PoETaV2 name -> brasa-eval lm_eval_task name
-# Only tasks that differ need to be listed here
+# Task name mapping: source repo name -> brasa-eval lm_eval_task name.
 TASK_NAME_MAP = {
     "bluex": "bluex_greedy",
     "enem_2022_greedy": "enem2022_greedy",
@@ -32,204 +38,291 @@ TASK_NAME_MAP = {
     "mkqa_greedy": "mkqa_pt_greedy",
 }
 
-# Checkpoints to import: (result_dir_in_repo, output_filename, display_name)
-CHECKPOINTS = [
-    (
-        "results/Qwen3-Base-results",
-        "Qwen3-1.7B-Base",
-        "Qwen/Qwen3-1.7B-Base",
-    ),
-    (
-        "results/TuQwen3-Base-LR1e5-run1-1ep-results",
-        "TuQwen3-Base-LR1e5-run1",
-        "ggg-llms-team/TuQwen3-Base-LR1e5-run1",
-    ),
-    (
-        "results/qwenrolina/LR1e5-b32g2gc8-order/QwenRolina3-Base-LR1e5-b32g2gc8-order-domain-1ep-results",
-        "QwenRolina3-Base",
-        "g4me/QwenRolina3-Base-LR1e5-b32g2gc8-order-domain",
-    ),
+CHECKPOINT_SPECS = [
+    {
+        "name": "Qwen 1.7B Base",
+        "owner": "Qwen",
+        "required_tokens": ["base-results"],
+        "preferred_tokens": ["qwen3"],
+        "forbidden_tokens": ["instruct"],
+    },
+    {
+        "name": "Gigaverbo adapted",
+        "owner": "ggg-llms-team",
+        "required_tokens": ["1ep"],
+        "preferred_tokens": ["lr1e5", "run1"],
+        "forbidden_tokens": ["instruct", "run2", "lr8e5"],
+    },
+    {
+        "name": "Carolina adapted",
+        "owner": "g4me",
+        "required_tokens": ["1ep"],
+        "preferred_tokens": ["lr1e5", "order", "domain", "b32g2gc8"],
+        "forbidden_tokens": ["wsd", "2ep", "3ep", "mix", "ppl", "irm", "b64g8"],
+    },
 ]
-
-# Metric preference order (same as generate_scorecards.py)
-METRIC_PREFERENCE = ["acc_norm", "acc", "f1_macro", "f1-macro", "f1", "exact_match", "pearson"]
 
 
 def git_show(repo_dir: Path, blob_path: str) -> str | None:
-    """Read a file from git objects using 'git show'."""
+    """Read a file from git objects using `git show`."""
     try:
         result = subprocess.run(
             ["git", "show", f"HEAD:{blob_path}"],
-            capture_output=True, text=True, cwd=str(repo_dir),
+            capture_output=True,
+            text=True,
+            cwd=str(repo_dir),
+            check=False,
         )
-        if result.returncode == 0:
-            return result.stdout
-    except Exception:
-        pass
-    return None
+    except OSError:
+        return None
+    return result.stdout if result.returncode == 0 else None
 
 
-def git_ls_tree(repo_dir: Path, tree_path: str) -> list[str]:
-    """List files in a git tree."""
+def git_ls_tree(repo_dir: Path, tree_path: str, *, recursive: bool = False, directories: bool = False) -> list[str]:
+    """List files or directories in a git tree."""
+    cmd = ["git", "ls-tree"]
+    if directories:
+        cmd.append("-d")
+    if recursive:
+        cmd.append("-r")
+    cmd.extend(["--name-only", "HEAD", tree_path])
     result = subprocess.run(
-        ["git", "ls-tree", "--name-only", "HEAD", tree_path + "/"],
-        capture_output=True, text=True, cwd=str(repo_dir),
+        cmd,
+        capture_output=True,
+        text=True,
+        cwd=str(repo_dir),
+        check=False,
     )
     if result.returncode != 0:
         return []
-    return [line.strip() for line in result.stdout.strip().split("\n") if line.strip()]
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
 
 def extract_task_result(task_data: dict) -> dict[str, float] | None:
-    """Extract metrics from a PoETaV2 task result JSON.
-
-    PoETaV2 format:
-        {"results": {"task_name": {"dynamic-random": {"acc": 0.72, ...}}}}
-
-    Returns flat dict like {"acc": 0.72} with the best metric.
-    """
+    """Extract metrics from a task result JSON."""
     results = task_data.get("results", {})
-    for task_name, task_metrics in results.items():
-        if isinstance(task_metrics, dict):
-            # Handle nested "dynamic-random" key
-            if "dynamic-random" in task_metrics:
-                raw = task_metrics["dynamic-random"]
-            else:
-                raw = task_metrics
+    for _, task_metrics in results.items():
+        if not isinstance(task_metrics, dict):
+            continue
 
-            clean: dict[str, float] = {}
-            for key, val in raw.items():
-                if "stderr" in key or "num_examples" in key:
-                    continue
-                try:
-                    v = float(val)
-                except (ValueError, TypeError):
-                    continue
-                # Normalize 0-100 scale to 0-1 for score metrics
-                # (some PoETaV2 tasks report percentages instead of proportions)
-                # Skip non-score keys like num_examples, thresholds, mse
-                skip_normalize = {"num_examples", "best_f1_threshold", "mse", "unknown_pred"}
-                if key not in skip_normalize and v > 1.0:
-                    v = v / 100.0
-                clean[key] = v
+        raw = task_metrics.get("dynamic-random", task_metrics)
+        clean: dict[str, float] = {}
+        for key, val in raw.items():
+            if "stderr" in key or "num_examples" in key:
+                continue
+            try:
+                value = float(val)
+            except (TypeError, ValueError):
+                continue
 
-            if clean:
-                return clean
+            skip_normalize = {"num_examples", "best_f1_threshold", "mse", "unknown_pred"}
+            if key not in skip_normalize and value > 1.0:
+                value = value / 100.0
+            clean[key] = value
+
+        if clean:
+            return clean
     return None
+
+
+def _extract_model_id(blob_content: str) -> str | None:
+    match = MODEL_ID_RE.search(blob_content)
+    if not match:
+        return None
+    return match.group(1)
+
+
+def _result_task_files(repo_dir: Path, result_dir: str) -> list[str]:
+    files = git_ls_tree(repo_dir, f"{result_dir}/", recursive=False)
+    return [
+        path for path in files
+        if path.endswith(".json") and "npm" not in path.lower() and "samples" not in path.lower()
+    ]
+
+
+def _score_candidate(result_dir: str, spec: dict[str, object]) -> int | None:
+    path_lower = result_dir.lower()
+    required_tokens = spec.get("required_tokens", [])
+    preferred_tokens = spec.get("preferred_tokens", [])
+    forbidden_tokens = spec.get("forbidden_tokens", [])
+
+    if any(token not in path_lower for token in required_tokens):
+        return None
+
+    score = 0
+    for token in preferred_tokens:
+        if token in path_lower:
+            score += 3
+    for token in forbidden_tokens:
+        if token in path_lower:
+            score -= 4
+
+    # Prefer shallower directories when scores tie.
+    score -= result_dir.count("/")
+    return score
+
+
+def discover_checkpoints(repo_dir: Path) -> list[tuple[str, str]]:
+    """Auto-discover the three paper checkpoints inside the source repo."""
+    result_dirs = [
+        path for path in git_ls_tree(repo_dir, "results", recursive=True, directories=True)
+        if path.endswith("-results")
+    ]
+
+    choices: dict[str, tuple[int, str]] = {}
+    for result_dir in result_dirs:
+        task_files = _result_task_files(repo_dir, result_dir)
+        if len(task_files) < 30:
+            continue
+
+        sample_blob = git_show(repo_dir, task_files[0])
+        if sample_blob is None:
+            continue
+        model_id = _extract_model_id(sample_blob)
+        if not model_id or "/" not in model_id:
+            continue
+
+        owner = model_id.split("/", 1)[0]
+        for spec in CHECKPOINT_SPECS:
+            if owner != spec["owner"]:
+                continue
+            score = _score_candidate(result_dir, spec)
+            if score is None:
+                continue
+            current = choices.get(spec["name"])
+            if current is None or score > current[0]:
+                choices[spec["name"]] = (score, result_dir)
+
+    missing = [spec["name"] for spec in CHECKPOINT_SPECS if spec["name"] not in choices]
+    if missing:
+        available = ", ".join(sorted(result_dirs))
+        raise RuntimeError(
+            f"Could not auto-discover checkpoint(s): {', '.join(missing)}. "
+            f"Available result directories: {available}"
+        )
+
+    ordered: list[tuple[str, str]] = []
+    for spec in CHECKPOINT_SPECS:
+        _, result_dir = choices[spec["name"]]
+        ordered.append((spec["name"], result_dir))
+    return ordered
 
 
 def import_checkpoint(
     repo_dir: Path,
     result_dir: str,
     output_name: str,
-    hf_model_id: str,
     output_dir: Path,
 ) -> None:
     """Import all task results for one checkpoint."""
-    # List task JSON files
-    all_files = git_ls_tree(repo_dir, result_dir)
-    task_files = [
-        f for f in all_files
-        if f.endswith(".json") and "npm" not in f.lower() and "samples" not in f.lower()
-    ]
-
+    task_files = _result_task_files(repo_dir, result_dir)
     if not task_files:
         log.error("No task JSON files found in %s", result_dir)
         return
 
     combined_results: dict[str, dict[str, float]] = {}
-    for fpath in task_files:
-        content = git_show(repo_dir, fpath)
+    for file_path in task_files:
+        content = git_show(repo_dir, file_path)
         if content is None:
-            log.warning("Could not read: %s", fpath)
+            log.warning("Could not read: %s", file_path)
             continue
 
         try:
             data = json.loads(content)
         except json.JSONDecodeError:
-            log.warning("Invalid JSON: %s", fpath)
+            log.warning("Invalid JSON: %s", file_path)
             continue
 
-        # Get original task name from the JSON results key
         results_dict = data.get("results", {})
-        for orig_task_name in results_dict:
+        for source_task_name in results_dict:
             metrics = extract_task_result(data)
             if metrics is None:
-                log.warning("No usable metrics in %s", fpath)
+                log.warning("No usable metrics in %s", file_path)
                 continue
-
-            # Map task name if needed
-            mapped_name = TASK_NAME_MAP.get(orig_task_name, orig_task_name)
+            mapped_name = TASK_NAME_MAP.get(source_task_name, source_task_name)
             combined_results[mapped_name] = metrics
-            break  # each file has one task
+            break
 
-    # Write combined result file
     output = {
         "results": combined_results,
         "config": {
-            "model": hf_model_id,
-            "source": "TuQwen-eval-PoETaV2",
+            "model": output_name,
+            "source": "private PoETa v2 evaluation repo",
         },
     }
 
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / f"{output_name}.json"
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    with open(out_path, "w", encoding="utf-8") as file_handle:
+        json.dump(output, file_handle, indent=2, ensure_ascii=False)
 
     log.info("Wrote %s (%d tasks) from %s", out_path, len(combined_results), result_dir)
 
-    # Report task name mapping applied
-    mapped = {k: v for k, v in TASK_NAME_MAP.items() if v in combined_results}
-    if mapped:
-        log.info("  Task name mappings applied: %s", mapped)
 
-    # Report missing tasks vs segmentation
-    try:
-        import pandas as pd
-        seg_path = REPO_ROOT / "data" / "paper_final_segmentation.csv"
-        if seg_path.exists():
-            seg = pd.read_csv(seg_path)
-            expected = set(seg["lm_eval_task"].dropna())
-            found = set(combined_results.keys())
-            missing = expected - found
-            if missing:
-                log.info("  Missing %d tasks vs segmentation: %s", len(missing), sorted(missing))
-            extra = found - expected
-            if extra:
-                log.info("  Extra %d tasks not in segmentation: %s", len(extra), sorted(extra))
-    except ImportError:
-        pass
+def resolve_repo_dir(requested_repo_dir: Path) -> Path | None:
+    """Resolve a reasonable default source repo path."""
+    if (requested_repo_dir / ".git").exists():
+        return requested_repo_dir
+    if (DEFAULT_REPO_DIR / ".git").exists():
+        return DEFAULT_REPO_DIR
+
+    for sibling in sorted(REPO_ROOT.parent.iterdir()):
+        if not sibling.is_dir():
+            continue
+        if not (sibling / ".git").exists():
+            continue
+        if not (sibling / "results" / "Qwen3-Base-results").exists():
+            continue
+        return sibling
+    return None
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Import PoETa v2 results from TuQwen-eval-PoETaV2 repo")
-    p.add_argument("--repo-dir", default=str(REPO_ROOT.parent / "TuQwen-eval-PoETaV2"),
-                    help="Path to cloned TuQwen-eval-PoETaV2 repo")
-    p.add_argument("--output-dir", default=str(REPO_ROOT / "outputs" / "eval_results"),
-                    help="Output directory for converted result JSONs")
-    return p.parse_args()
+    parser = argparse.ArgumentParser(description="Import PoETa v2 results into brasa-eval format")
+    parser.add_argument(
+        "--repo-dir",
+        default=str(DEFAULT_REPO_DIR),
+        help="Path to the cloned private PoETa v2 evaluation repository",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=str(REPO_ROOT / "outputs" / "eval_results"),
+        help="Output directory for converted result JSONs",
+    )
+    return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    repo_dir = Path(args.repo_dir)
+    repo_dir = resolve_repo_dir(Path(args.repo_dir))
     output_dir = Path(args.output_dir)
 
-    if not (repo_dir / ".git").exists():
-        log.error("Not a git repo: %s", repo_dir)
+    if repo_dir is None:
+        log.error(
+            "Could not locate the source results repository. "
+            "Pass it explicitly with --repo-dir."
+        )
         return
 
     log.info("Importing from: %s", repo_dir)
     log.info("Output dir: %s", output_dir)
     log.info("")
 
-    for result_dir, output_name, hf_model_id in CHECKPOINTS:
+    try:
+        checkpoint_dirs = discover_checkpoints(repo_dir)
+    except RuntimeError as exc:
+        log.error("%s", exc)
+        return
+
+    for output_name, result_dir in checkpoint_dirs:
         log.info("--- %s ---", output_name)
-        import_checkpoint(repo_dir, result_dir, output_name, hf_model_id, output_dir)
+        import_checkpoint(repo_dir, result_dir, output_name, output_dir)
         log.info("")
 
-    log.info("Done. Run 'python scripts/generate_scorecards.py --results_dir %s' to generate scorecards.", output_dir)
+    log.info(
+        "Done. Run 'python scripts/generate_scorecards.py --results_dir %s' to generate scorecards.",
+        output_dir,
+    )
 
 
 if __name__ == "__main__":

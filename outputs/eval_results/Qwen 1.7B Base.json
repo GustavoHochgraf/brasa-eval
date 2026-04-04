@@ -180,7 +180,7 @@
     }
   },
   "config": {
-    "model": "Qwen/Qwen3-1.7B-Base",
-    "source": "TuQwen-eval-PoETaV2"
+    "model": "Qwen 1.7B Base",
+    "source": "private PoETa v2 evaluation repo"
   }
 }

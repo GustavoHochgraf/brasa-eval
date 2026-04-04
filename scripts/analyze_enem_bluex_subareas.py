@@ -30,23 +30,23 @@ log = logging.getLogger(__name__)
 
 # ── Configuration ─────────────────────────────────────────────────────
 CHECKPOINTS = [
-    "Qwen3-1.7B-Base",
-    "TuQwen3-Base-LR1e5-run1",
-    "QwenRolina3-Base",
+    "Qwen 1.7B Base",
+    "Gigaverbo adapted",
+    "Carolina adapted",
 ]
 BASELINE = CHECKPOINTS[0]
 
 CHECKPOINT_SHORT = {
-    "Qwen3-1.7B-Base": "Qwen Base",
-    "TuQwen3-Base-LR1e5-run1": "TuQwen\n(GigaVerbo)",
-    "QwenRolina3-Base": "QwenRolina\n(Carolina)",
+    "Qwen 1.7B Base": "Qwen 1.7B\nBase",
+    "Gigaverbo adapted": "Gigaverbo\nadapted",
+    "Carolina adapted": "Carolina\nadapted",
 }
 
 # Short names for CSV column headers (no line breaks)
 CHECKPOINT_CSV = {
-    "Qwen3-1.7B-Base": "qwen_base",
-    "TuQwen3-Base-LR1e5-run1": "tuqwen",
-    "QwenRolina3-Base": "qwenrolina",
+    "Qwen 1.7B Base": "qwen_1_7b_base",
+    "Gigaverbo adapted": "gigaverbo_adapted",
+    "Carolina adapted": "carolina_adapted",
 }
 
 TASKS = {
@@ -250,11 +250,14 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
         "# ENEM / BLUEX Subarea Analysis — Summary",
         "",
         "Supplementary drill-down within the Brazil / Exams category.",
-        "Baseline: Qwen3-1.7B-Base. Deltas in percentage points (pp).",
+        "Baseline: Qwen 1.7B Base. Deltas in percentage points (pp).",
         "",
     ]
 
-    for cp_key, cp_label in [("tuqwen", "TuQwen (GigaVerbo)"), ("qwenrolina", "QwenRolina (Carolina)")]:
+    for cp_key, cp_label in [
+        ("gigaverbo_adapted", "Gigaverbo adapted"),
+        ("carolina_adapted", "Carolina adapted"),
+    ]:
         delta_col = f"{cp_key}_delta"
         if delta_col not in deltas_df.columns:
             continue
@@ -291,37 +294,37 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
     enem_math = deltas_df[(deltas_df["task"] == "ENEM 2022") & (deltas_df["subarea"] == "mathematics")]
     if not enem_math.empty:
         r = enem_math.iloc[0]
-        tuq_d = r.get("tuqwen_delta")
-        rol_d = r.get("qwenrolina_delta")
-        if tuq_d is not None and rol_d is not None:
+        giga_d = r.get("gigaverbo_adapted_delta")
+        carol_d = r.get("carolina_adapted_delta")
+        if giga_d is not None and carol_d is not None:
             findings.append(
                 f"- **ENEM 2022 Mathematics** sees the largest absolute gains from continued pretraining "
-                f"(+{tuq_d*100:.1f} pp TuQwen, +{rol_d*100:.1f} pp QwenRolina), "
+                f"(+{giga_d*100:.1f} pp Gigaverbo adapted, +{carol_d*100:.1f} pp Carolina adapted), "
                 f"though from a very low baseline ({r['baseline_score']:.2f})."
             )
 
     bluex_bio = deltas_df[(deltas_df["task"] == "BLUEX") & (deltas_df["subarea"] == "biology")]
     if not bluex_bio.empty:
         r = bluex_bio.iloc[0]
-        tuq_d = r.get("tuqwen_delta")
-        rol_d = r.get("qwenrolina_delta")
-        if tuq_d is not None and rol_d is not None:
+        giga_d = r.get("gigaverbo_adapted_delta")
+        carol_d = r.get("carolina_adapted_delta")
+        if giga_d is not None and carol_d is not None:
             findings.append(
                 f"- **BLUEX Biology** improves with both corpora "
-                f"(+{tuq_d*100:.1f} pp TuQwen, +{rol_d*100:.1f} pp QwenRolina), "
-                f"the largest BLUEX gain for QwenRolina."
+                f"(+{giga_d*100:.1f} pp Gigaverbo adapted, +{carol_d*100:.1f} pp Carolina adapted), "
+                f"the largest BLUEX gain for Carolina adapted."
             )
 
     for sub in ["physics", "chemistry"]:
         row = deltas_df[(deltas_df["task"] == "BLUEX") & (deltas_df["subarea"] == sub)]
         if not row.empty:
             r = row.iloc[0]
-            tuq_d = r.get("tuqwen_delta")
-            rol_d = r.get("qwenrolina_delta")
-            if tuq_d is not None and rol_d is not None and (tuq_d < -0.01 or rol_d < -0.01):
+            giga_d = r.get("gigaverbo_adapted_delta")
+            carol_d = r.get("carolina_adapted_delta")
+            if giga_d is not None and carol_d is not None and (giga_d < -0.01 or carol_d < -0.01):
                 findings.append(
                     f"- **BLUEX {sub.title()}** declines for at least one model "
-                    f"({tuq_d*100:+.1f} pp TuQwen, {rol_d*100:+.1f} pp QwenRolina), "
+                    f"({giga_d*100:+.1f} pp Gigaverbo adapted, {carol_d*100:+.1f} pp Carolina adapted), "
                     f"suggesting continued pretraining in Portuguese does not help STEM problem-solving."
                 )
                 break
@@ -329,11 +332,11 @@ def generate_summary(deltas_df: pd.DataFrame, out_dir: Path) -> None:
     enem_ns = deltas_df[(deltas_df["task"] == "ENEM 2022") & (deltas_df["subarea"] == "natural-sciences")]
     if not enem_ns.empty:
         r = enem_ns.iloc[0]
-        rol_d = r.get("qwenrolina_delta")
-        if rol_d is not None and rol_d > 0.05:
+        carol_d = r.get("carolina_adapted_delta")
+        if carol_d is not None and carol_d > 0.05:
             findings.append(
-                f"- **ENEM 2022 Natural Sciences** shows a strong QwenRolina gain "
-                f"(+{rol_d*100:.1f} pp), consistent with the Carolina corpus "
+                f"- **ENEM 2022 Natural Sciences** shows a strong Carolina adapted gain "
+                f"(+{carol_d*100:.1f} pp), consistent with the Carolina corpus "
                 f"containing Brazilian educational content."
             )
 

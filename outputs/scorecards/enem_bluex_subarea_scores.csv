@@ -1,40 +1,40 @@
 checkpoint,task,subarea,score
-Qwen3-1.7B-Base,ENEM 2022,human-sciences,0.7027
-Qwen3-1.7B-Base,ENEM 2022,mathematics,0.1364
-Qwen3-1.7B-Base,ENEM 2022,natural-sciences,0.5769
-Qwen3-1.7B-Base,ENEM 2022,languages,0.7576
-Qwen3-1.7B-Base,BLUEX,history,0.6792
-Qwen3-1.7B-Base,BLUEX,geography,0.6053
-Qwen3-1.7B-Base,BLUEX,biology,0.6867
-Qwen3-1.7B-Base,BLUEX,chemistry,0.4423
-Qwen3-1.7B-Base,BLUEX,physics,0.2911
-Qwen3-1.7B-Base,BLUEX,mathematics,0.2803
-Qwen3-1.7B-Base,BLUEX,portuguese,0.5598
-Qwen3-1.7B-Base,BLUEX,english,0.6571
-Qwen3-1.7B-Base,BLUEX,philosophy,0.6364
-TuQwen3-Base-LR1e5-run1,ENEM 2022,human-sciences,0.7297
-TuQwen3-Base-LR1e5-run1,ENEM 2022,mathematics,0.1818
-TuQwen3-Base-LR1e5-run1,ENEM 2022,natural-sciences,0.6154
-TuQwen3-Base-LR1e5-run1,ENEM 2022,languages,0.697
-TuQwen3-Base-LR1e5-run1,BLUEX,history,0.7107
-TuQwen3-Base-LR1e5-run1,BLUEX,geography,0.6053
-TuQwen3-Base-LR1e5-run1,BLUEX,biology,0.7349
-TuQwen3-Base-LR1e5-run1,BLUEX,chemistry,0.4038
-TuQwen3-Base-LR1e5-run1,BLUEX,physics,0.2785
-TuQwen3-Base-LR1e5-run1,BLUEX,mathematics,0.2652
-TuQwen3-Base-LR1e5-run1,BLUEX,portuguese,0.5598
-TuQwen3-Base-LR1e5-run1,BLUEX,english,0.6143
-TuQwen3-Base-LR1e5-run1,BLUEX,philosophy,0.6364
-QwenRolina3-Base,ENEM 2022,human-sciences,0.7297
-QwenRolina3-Base,ENEM 2022,mathematics,0.2273
-QwenRolina3-Base,ENEM 2022,natural-sciences,0.6923
-QwenRolina3-Base,ENEM 2022,languages,0.7273
-QwenRolina3-Base,BLUEX,history,0.7107
-QwenRolina3-Base,BLUEX,geography,0.6579
-QwenRolina3-Base,BLUEX,biology,0.7831
-QwenRolina3-Base,BLUEX,chemistry,0.4615
-QwenRolina3-Base,BLUEX,physics,0.2405
-QwenRolina3-Base,BLUEX,mathematics,0.3106
-QwenRolina3-Base,BLUEX,portuguese,0.555
-QwenRolina3-Base,BLUEX,english,0.6714
-QwenRolina3-Base,BLUEX,philosophy,0.5909
+Qwen 1.7B Base,ENEM 2022,human-sciences,0.7027
+Qwen 1.7B Base,ENEM 2022,mathematics,0.1364
+Qwen 1.7B Base,ENEM 2022,natural-sciences,0.5769
+Qwen 1.7B Base,ENEM 2022,languages,0.7576
+Qwen 1.7B Base,BLUEX,history,0.6792
+Qwen 1.7B Base,BLUEX,geography,0.6053
+Qwen 1.7B Base,BLUEX,biology,0.6867
+Qwen 1.7B Base,BLUEX,chemistry,0.4423
+Qwen 1.7B Base,BLUEX,physics,0.2911
+Qwen 1.7B Base,BLUEX,mathematics,0.2803
+Qwen 1.7B Base,BLUEX,portuguese,0.5598
+Qwen 1.7B Base,BLUEX,english,0.6571
+Qwen 1.7B Base,BLUEX,philosophy,0.6364
+Gigaverbo adapted,ENEM 2022,human-sciences,0.7297
+Gigaverbo adapted,ENEM 2022,mathematics,0.1818
+Gigaverbo adapted,ENEM 2022,natural-sciences,0.6154
+Gigaverbo adapted,ENEM 2022,languages,0.697
+Gigaverbo adapted,BLUEX,history,0.7107
+Gigaverbo adapted,BLUEX,geography,0.6053
+Gigaverbo adapted,BLUEX,biology,0.7349
+Gigaverbo adapted,BLUEX,chemistry,0.4038
+Gigaverbo adapted,BLUEX,physics,0.2785
+Gigaverbo adapted,BLUEX,mathematics,0.2652
+Gigaverbo adapted,BLUEX,portuguese,0.5598
+Gigaverbo adapted,BLUEX,english,0.6143
+Gigaverbo adapted,BLUEX,philosophy,0.6364
+Carolina adapted,ENEM 2022,human-sciences,0.7297
+Carolina adapted,ENEM 2022,mathematics,0.2273
+Carolina adapted,ENEM 2022,natural-sciences,0.6923
+Carolina adapted,ENEM 2022,languages,0.7273
+Carolina adapted,BLUEX,history,0.7107
+Carolina adapted,BLUEX,geography,0.6579
+Carolina adapted,BLUEX,biology,0.7831
+Carolina adapted,BLUEX,chemistry,0.4615
+Carolina adapted,BLUEX,physics,0.2405
+Carolina adapted,BLUEX,mathematics,0.3106
+Carolina adapted,BLUEX,portuguese,0.555
+Carolina adapted,BLUEX,english,0.6714
+Carolina adapted,BLUEX,philosophy,0.5909

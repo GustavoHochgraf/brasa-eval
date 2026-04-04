@@ -180,7 +180,7 @@
     }
   },
   "config": {
-    "model": "g4me/QwenRolina3-Base-LR1e5-b32g2gc8-order-domain",
-    "source": "TuQwen-eval-PoETaV2"
+    "model": "Carolina adapted",
+    "source": "private PoETa v2 evaluation repo"
   }
 }

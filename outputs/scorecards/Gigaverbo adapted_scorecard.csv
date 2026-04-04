@@ -1,0 +1,41 @@
+checkpoint,task,lm_eval_task,categoria_paper,native_translated,metric,score
+Gigaverbo adapted,Assin RTE,assin_rte_greedy,Text understanding / QA / classification,Native,acc,0.9066666666666667
+Gigaverbo adapted,Assin STS,assin_sts_greedy,Text understanding / QA / classification,Native,pearson,0.5707472534409384
+Gigaverbo adapted,BLUEX,bluex_greedy,Brazil / exams / culture,Native,acc_norm,0.5327564894932015
+Gigaverbo adapted,Enem,enem_greedy,Brazil / exams / culture,Native,acc,0.7106986899563319
+Gigaverbo adapted,Enem 2022,enem2022_greedy,Brazil / exams / culture,Native,acc,0.5932203389830508
+Gigaverbo adapted,Faquad,faquad_nli_greedy,Text understanding / QA / classification,Native,f1,0.8473126727252659
+Gigaverbo adapted,TweetsentBR,tweetsentbr_greedy,Social / safety,Native,acc,0.5375
+Gigaverbo adapted,Broverbs History to Proverb,broverbs_history_to_proverb_greedy,Brazil / exams / culture,Native,acc,0.5533333333333333
+Gigaverbo adapted,Broverbs Proverb to History,broverbs_proverb_to_history_greedy,Brazil / exams / culture,Native,acc,0.43333333333333335
+Gigaverbo adapted,InferBR,inferbr_greedy,Reasoning,Native,acc,0.8366666666666667
+Gigaverbo adapted,Repro,repro_greedy,Brazil / exams / culture,Native,acc,0.9566666666666667
+Gigaverbo adapted,Mina BR,mina_br_greedy,Social / safety,Native,acc,0.6866666666666666
+Gigaverbo adapted,PT Hate Speech,pt_hate_speech_greedy,Social / safety,Native,acc,0.6966666666666667
+Gigaverbo adapted,HateBR Binary,hatebr_binary_greedy,Social / safety,Native,acc,0.8
+Gigaverbo adapted,AGNews,agnews_pt_greedy,Text understanding / QA / classification,Translated,acc,0.8433333333333333
+Gigaverbo adapted,BoolQ,boolq_pt_greedy,Text understanding / QA / classification,Translated,acc,0.52
+Gigaverbo adapted,IMDb,imdb_pt_greedy,Text understanding / QA / classification,Translated,acc,0.87
+Gigaverbo adapted,Massive,massive_pt_greedy,Text understanding / QA / classification,Translated,acc,0.6933333333333332
+Gigaverbo adapted,MKQA,mkqa_pt_greedy,Text understanding / QA / classification,Translated,best_em,0.11
+Gigaverbo adapted,SST-2,sst2_pt_greedy,Text understanding / QA / classification,Translated,acc,0.8966666666666666
+Gigaverbo adapted,WSC-285,wsc285_pt_greedy,Reasoning,Translated,acc,0.6
+Gigaverbo adapted,BB Analogical Similarity,bigbench_pt_analogical_similarity_greedy,Reasoning,Translated,acc,0.27666666666666667
+Gigaverbo adapted,BB Code Line Description,bigbench_pt_code_line_description_greedy,Code / other,Translated,acc,0.9666666666666667
+Gigaverbo adapted,BB Empirical Judgments,bigbench_pt_empirical_judgments_greedy,Reasoning,Translated,acc,0.6060606060606061
+Gigaverbo adapted,BB Fallacies Syllogisms,bigbench_pt_formal_fallacies_syllogisms_negation_greedy,Reasoning,Translated,acc,0.5166666666666667
+Gigaverbo adapted,BB General Knowledge,bigbench_pt_general_knowledge_greedy,Text understanding / QA / classification,Translated,acc,0.8428571428571429
+Gigaverbo adapted,BB Mathematical Induction,bigbench_pt_mathematical_induction_greedy,Math,Translated,acc,0.7142857142857143
+Gigaverbo adapted,BB Simple Ethical Questions,bigbench_pt_simple_ethical_questions_greedy,Social / safety,Translated,acc,0.8608695652173913
+Gigaverbo adapted,BB StrategyQA,bigbench_pt_strategyqa_greedy,Reasoning,Translated,acc,0.62
+Gigaverbo adapted,BB VitaminC Fact Verification,bigbench_pt_vitaminc_fact_verification_greedy,Text understanding / QA / classification,Translated,acc,0.6166666666666667
+Gigaverbo adapted,BB Social IQA,bigbench_pt_social_iqa_greedy,Reasoning,Translated,acc,0.6066666666666667
+Gigaverbo adapted,BB Causal Judgment,bigbench_pt_causal_judgment_greedy,Reasoning,Translated,acc,0.5684210526315789
+Gigaverbo adapted,BB BBQ,bigbench_pt_bbq_greedy,Social / safety,Translated,acc,0.7266666666666667
+Gigaverbo adapted,BB Cause and Effect,bigbench_pt_cause_and_effect_two_sentences_greedy,Reasoning,Translated,acc,0.7647058823529411
+Gigaverbo adapted,StoryCloze,storycloze_pt_greedy,Reasoning,Translated,acc,0.8766666666666667
+Gigaverbo adapted,Math MC,math_mc_greedy,Math,Translated,acc,0.51
+Gigaverbo adapted,GSM8K MC,gsm8k_mc_greedy,Math,Translated,acc,0.41333333333333333
+Gigaverbo adapted,AGIEval SAT Math,agieval_sat_math_greedy,Math,Translated,acc,0.4818181818181818
+Gigaverbo adapted,Balanced COPA,balanced_copa_greedy,Reasoning,Translated,acc,0.85
+Gigaverbo adapted,LogiQA,logiqa_greedy,Reasoning,Translated,acc,0.4208754208754209

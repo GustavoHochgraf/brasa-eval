@@ -44,21 +44,21 @@ log = logging.getLogger(__name__)
 # ── Configuration ─────────────────────────────────────────────────────
 
 CHECKPOINTS = [
-    "Qwen3-1.7B-Base",
-    "TuQwen3-Base-LR1e5-run1",
-    "QwenRolina3-Base",
+    "Qwen 1.7B Base",
+    "Gigaverbo adapted",
+    "Carolina adapted",
 ]
 
 CHECKPOINT_SHORT = {
-    "Qwen3-1.7B-Base": "Qwen Base",
-    "TuQwen3-Base-LR1e5-run1": "TuQwen\n(GigaVerbo)",
-    "QwenRolina3-Base": "QwenRolina\n(Carolina)",
+    "Qwen 1.7B Base": "Qwen 1.7B\nBase",
+    "Gigaverbo adapted": "Gigaverbo\nadapted",
+    "Carolina adapted": "Carolina\nadapted",
 }
 
 CHECKPOINT_SHORT_FLAT = {
-    "Qwen3-1.7B-Base": "Qwen Base",
-    "TuQwen3-Base-LR1e5-run1": "TuQwen (GigaVerbo)",
-    "QwenRolina3-Base": "QwenRolina (Carolina)",
+    "Qwen 1.7B Base": "Qwen 1.7B Base",
+    "Gigaverbo adapted": "Gigaverbo adapted",
+    "Carolina adapted": "Carolina adapted",
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────

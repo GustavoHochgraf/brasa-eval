@@ -34,6 +34,12 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
+DEFAULT_CHECKPOINT_ORDER = [
+    "Qwen 1.7B Base",
+    "Gigaverbo adapted",
+    "Carolina adapted",
+]
+
 
 def _resolve_metric(
     task_results: dict[str, float],
@@ -200,8 +206,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--checkpoint_order",
         nargs="*",
-        default=None,
-        help="Ordered list of checkpoint names for delta computation (derived from filenames if omitted)",
+        default=DEFAULT_CHECKPOINT_ORDER,
+        help="Ordered list of checkpoint names for processing and delta computation",
     )
     return p.parse_args()
 
@@ -218,7 +224,11 @@ def main() -> None:
         sys.exit(1)
 
     # Discover result files
-    result_files = sorted(results_dir.glob("*.json"))
+    order_index = {name: idx for idx, name in enumerate(args.checkpoint_order)}
+    result_files = sorted(
+        results_dir.glob("*.json"),
+        key=lambda path: (order_index.get(path.stem, len(order_index)), path.stem.lower()),
+    )
     if not result_files:
         log.error("No JSON result files found in %s", results_dir)
         return
@@ -267,7 +277,8 @@ def main() -> None:
         log.info("Wrote: %s", out_dir / "comparison_table.csv")
 
     # --- Delta analysis ---
-    order = args.checkpoint_order or checkpoint_names
+    order = [cp for cp in args.checkpoint_order if cp in checkpoint_names]
+    order.extend(cp for cp in checkpoint_names if cp not in order)
     delta_df = compute_deltas(task_dfs, order)
     if delta_df is not None and not delta_df.empty:
         delta_df.to_csv(out_dir / "task_deltas.csv", index=False)
